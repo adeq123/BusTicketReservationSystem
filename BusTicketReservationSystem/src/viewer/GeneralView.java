@@ -23,6 +23,14 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import javax.swing.SwingConstants;
 import javax.swing.JButton;
+import java.awt.Panel;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import javax.swing.JToggleButton;
+import javax.swing.border.LineBorder;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Component;
 
 public class GeneralView {
 
@@ -59,7 +67,7 @@ public class GeneralView {
      */
     private void initialize() {
 	Frame = new JFrame();
-	Frame.setBounds(100, 100, 1124, 716);
+	Frame.setBounds(100, 100, 1079, 526);
 	Frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	Frame.getContentPane().setLayout(new BoxLayout(Frame.getContentPane(), BoxLayout.X_AXIS));
 	
@@ -78,7 +86,7 @@ public class GeneralView {
 	mainAplicationPanel.add(lblBusImage);
 	
 	JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-	tabbedPane.setBounds(10, 147, 1088, 520);
+	tabbedPane.setBounds(10, 147, 1061, 335);
 	mainAplicationPanel.add(tabbedPane);
 	
 	JPanel ReservationPanel = new JPanel();
@@ -100,7 +108,7 @@ public class GeneralView {
 	ReservationPanel.add(lblTo);
 	
 	JComboBox toDropDown = new JComboBox();
-	toDropDown.setBounds(288, 10, 143, 20);
+	toDropDown.setBounds(288, 10, 157, 20);
 	ReservationPanel.add(toDropDown);
 	
 	JLabel lblDate = new JLabel("Date:");
@@ -143,13 +151,53 @@ public class GeneralView {
 		ReservationPanel.add(YYYYField);
 		
 		JButton btnGetBusDetails = new JButton("Get Bus Details");
-		btnGetBusDetails.setBounds(319, 54, 105, 23);
+		btnGetBusDetails.setBounds(319, 54, 126, 23);
 		ReservationPanel.add(btnGetBusDetails);
 		
 		JButton btnReset = new JButton("Reset");
-		btnReset.setBounds(434, 54, 61, 23);
+		btnReset.setBounds(455, 54, 89, 23);
 		ReservationPanel.add(btnReset);
+		
+		JLabel lblSelectBusFrom = new JLabel("Select bus from list & Click Load :");
+		lblSelectBusFrom.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblSelectBusFrom.setBounds(10, 102, 212, 14);
+		ReservationPanel.add(lblSelectBusFrom);
+		
+		JComboBox busListDropDown = new JComboBox();
+		busListDropDown.setBounds(221, 101, 224, 20);
+		ReservationPanel.add(busListDropDown);
+		
+		JButton btnMakeReservation = new JButton("Make Reservation");
+		btnMakeReservation.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) { //MOVE TO CONTROLLER
+			    PassengerWindow passenger = new PassengerWindow();
+			    passenger.newScreen();
+			}
+		});
+		btnMakeReservation.setBounds(187, 171, 143, 58);
+		ReservationPanel.add(btnMakeReservation);
+		
+		JLabel lblBusType = new JLabel("Bus type:");
+		lblBusType.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblBusType.setBounds(10, 127, 65, 20);
+		ReservationPanel.add(lblBusType);
+		
+		JLabel lblShowbustype = new JLabel("showBusType");
+		lblShowbustype.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblShowbustype.setBounds(78, 132, 88, 14);
+		ReservationPanel.add(lblShowbustype);
+		
+		JButton btnLoadBuss = new JButton("Load");
+		btnLoadBuss.setBounds(455, 100, 89, 23);
+		ReservationPanel.add(btnLoadBuss);
+		
+		Mercedes121Layout mercedes = new Mercedes121Layout();
+		JPanel layoutPanel = new JPanel();
+		layoutPanel.setBounds(575, 31, 460, 198);
+		ReservationPanel.add(layoutPanel);
+		layoutPanel.add(mercedes);
 	
+		
 	JPanel TicketsPanel = new JPanel();
 	tabbedPane.addTab("Tickets Management", null, TicketsPanel, null);
 	TicketsPanel.setLayout(null);
