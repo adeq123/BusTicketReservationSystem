@@ -31,6 +31,7 @@ import javax.swing.border.LineBorder;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Component;
+import java.awt.BorderLayout;
 
 public class GeneralView {
 
@@ -195,7 +196,8 @@ public class GeneralView {
 		JPanel layoutPanel = new JPanel();
 		layoutPanel.setBounds(575, 31, 460, 198);
 		ReservationPanel.add(layoutPanel);
-		layoutPanel.add(mercedes);
+		layoutPanel.setLayout(new BorderLayout(0, 0));
+		layoutPanel.add(mercedes); //make a method out of it
 	
 		
 	JPanel TicketsPanel = new JPanel();
