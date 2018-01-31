@@ -31,9 +31,10 @@ public class DataBaseModel {
 	   	+ "busId int NOT NULL, "
 	   	+ "busName varchar(255), "
 	   	+ "busType varchar(255), "
+	   	+ "seatsOccupied varchar(255), "
 	   	+ "source varchar(255), "
 	   	+ "timingSource TIME(0), "
-	   	+ "destiantion varchar(255), "
+	   	+ "destination varchar(255), "
 	   	+ "timingDestination TIME(0), "
 	   	+ "distance float NOT NULL, "
 	   	+ "PRIMARY KEY(busId))");
@@ -66,5 +67,36 @@ public class DataBaseModel {
 	   
 	   create.executeUpdate();
 	}catch(Exception e){System.out.println(e);}
+    }
+    
+    public void insertNewBus(int busId, String busName, String busType, String seatsOccupied, 
+	    String source, String timing, String destination, String timingDestination, double distance) throws Exception{
+	
+	   Connection conn = getConnectionToBusDataBase();
+	   
+	   PreparedStatement create = conn.prepareStatement("INSERT INTO busTimeTable ("
+		   + "busId, "
+		   + "busName, "
+		   + "busType, "
+		   + "seatsOccupied, "
+		   + "source, "
+		   + "timingSource, "
+		   + "destination, "
+		   + "timingDestination, "
+		   + "distance) "
+		   + "values ( "
+		   	+ "'" + busId + "'," 
+		   	+ "'" + busName + "'," 
+		   	+ "'" + busType + "',"
+		   	+ "'" + seatsOccupied + "',"
+		   	+ "'" + source + "',"
+		   	+ "'" + timing + "',"
+		   	+ "'" + destination + "',"
+		   	+ "'" + timingDestination + "',"
+		   	+ "'" + distance + "'" 
+		   	+ ")"); 
+	   
+	   
+	   create.executeUpdate();
     }
 }
