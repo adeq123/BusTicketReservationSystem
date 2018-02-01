@@ -15,12 +15,21 @@ public class Controller {
 	theView = new GeneralView (this);
 	dbModel = new DataBaseModel();
 	theView.getFrame().setVisible(true);
+	
+	initializeListeners();
     }
-/* Bus Management tab listeners*/
+private void initializeListeners() {
+    	/* Bus management TAB*/
+	theView.getBtnAdd().addActionListener(new AddBusListener());
+	
+    }
+
+	/* Bus Management tab listeners*/
     public class AddBusListener implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-	    // TODO Auto-generated method stub
+	    int busID = theView.ge
+	  dbModel.insertNewBus(,busName, busType, seatsOccupied, source, timing, destination, timingDestination, distance);
 
 	}
     }

@@ -7,7 +7,7 @@ import java.sql.SQLException;
 
 public class DataBaseModel {
 
-    public Connection getConnectionToBusDataBase() throws Exception{
+    private Connection getConnectionToBusDataBase() throws Exception{
 	try{
 	String driver = "com.mysql.jdbc.Driver";
 	String url = "jdbc:mysql://localhost:3306/busticketreservationsystem";
