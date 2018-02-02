@@ -140,9 +140,26 @@ public class DataBaseModel {
      * @throws Exception
      */
     public ResultSet getBusTimeTable() throws Exception{
-	Connection conn = getConnectionToBusDataBase(); //MAKE FIELD ??
+	Connection conn = getConnectionToBusDataBase(); //MAKE A FIELD ??
 	PreparedStatement create = conn.prepareStatement("SELECT * FROM busTimeTable");
 	ResultSet rs = create.executeQuery();
 	return rs;
+    }
+    /**
+     * The method returns busId column
+     * @return, ResultSet, busId column
+     * @throws Exception
+     */
+    public ResultSet getAllBusID() throws Exception{
+	Connection conn = getConnectionToBusDataBase(); //MAKE A FIELD ??
+	PreparedStatement create = conn.prepareStatement("SELECT busId FROM busTimeTable");
+	ResultSet rs = create.executeQuery();
+	return rs;
+    }
+    
+    public void deleteBusWithID(int id) throws Exception{
+	Connection conn = getConnectionToBusDataBase(); //MAKE A FIELD ??
+	PreparedStatement create = conn.prepareStatement("DELETE FROM bustimetable WHERE busId=" + Integer.toString(id));
+	create.executeUpdate();
     }
 }

@@ -19,6 +19,7 @@ import java.awt.BorderLayout;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JScrollPane;
+import javax.swing.ListSelectionModel;
 
 /**
  * This application was developed with WindowsBuilder
@@ -52,6 +53,7 @@ public class GeneralView {
     
     public static final String[] allowedBusTypes = new String[] {"Mercedes 121"
     };
+    private JTable table;
 
     
     /**
@@ -104,6 +106,24 @@ public class GeneralView {
 	tabbedPane.addTab("Tickets Management", null, TicketsPanel, null);
 	TicketsPanel.setLayout(null);
 	
+	JScrollPane scrollPane = new JScrollPane();
+	scrollPane.setBounds(59, 48, 228, 163);
+	TicketsPanel.add(scrollPane);
+	
+	table = new JTable();
+	table.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+	table.setModel(new DefaultTableModel(
+		new Object[][] {
+			{null, null},
+			{null, null},
+			{null, null},
+		},
+		new String[] {
+			"New column", "New column"
+		}
+	));
+	scrollPane.setViewportView(table);
+	
 	JPanel FareCalculatorPanel = new JPanel();
 	tabbedPane.addTab("Fare Calculoator", null, FareCalculatorPanel, null);
 	FareCalculatorPanel.setLayout(null);
@@ -125,6 +145,4 @@ public class GeneralView {
     public ReservationTab getReservationPanel() {
         return reservationPanel;
     }
-
-    
 }

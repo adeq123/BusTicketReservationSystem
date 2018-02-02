@@ -19,8 +19,8 @@ public class ApplicationRunner {
 	EventQueue.invokeLater(new Runnable() {
 	    public void run() {
 		try {
-			Controller appController = new Controller();
-			appController.start();
+		    Controller appController = new Controller();
+		    appController.start();
 		} catch (Exception e) {
 		    e.printStackTrace();
 		}
