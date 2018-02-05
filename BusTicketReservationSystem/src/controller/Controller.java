@@ -40,6 +40,8 @@ public class Controller {
 	theView.getBusManagementPanel().getBtnAdd().addActionListener(new AddBusListener());
 	theView.getBusManagementPanel().getBtnRefreshTable().addActionListener(new RefreshTableListener());
 	theView.getBusManagementPanel().getBtnFetchRecord().addActionListener(new FetchBusListener());
+	theView.getBusManagementPanel().getBtnDelete().addActionListener(new DeleteBusListener());
+	theView.getBusManagementPanel().getBtnUpdate().addActionListener(new UpdateBusListener());
     }
 
     /**
@@ -112,22 +114,26 @@ public class Controller {
 		cleanBusMangementFields();
 	    } catch (Exception e) {
 		System.out.println(e.getMessage());
+		/* ERROR MESSEAGE POPING UP HERE*/
 	    }
 
 	}
     }
 
-    public class DelteBusListener implements ActionListener{
+    public class DeleteBusListener implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 	    try {
 		dbModel.deleteBusWithID(Integer.parseInt(theView.getBusManagementPanel().getTfBusID().getText()));
+		getAndShowBusTimeTable();
+		cleanBusMangementFields();
 	    } catch (NumberFormatException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
 	    } catch (Exception e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
+		/* ERROR MESSEAGE POPING UP HERE*/
 	    }
 	}
     }
@@ -135,7 +141,26 @@ public class Controller {
     public class UpdateBusListener implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-	    // TODO Auto-generated method stub
+	    int busID = Integer.parseInt(theView.getBusManagementPanel().getTfBusID().getText());
+	    String busName = theView.getBusManagementPanel().getTfBusName().getText();
+	    String busType = (String) theView.getBusManagementPanel().getCbBusType().getSelectedItem();
+	    String seatsOccupied = (String) theView.getBusManagementPanel().getTfSeatsOccupied().getText();
+	    String source = (String) theView.getBusManagementPanel().getTfFrom().getText();   
+	    String timing = (String) theView.getBusManagementPanel().getCbHHFrom().getSelectedItem() 
+		    + ":" + (String) theView.getBusManagementPanel().getCbMMFrom().getSelectedItem();
+	    String destination = theView.getBusManagementPanel().getTfTo().getText();
+	    String timingDestination = (String) theView.getBusManagementPanel().getCbHHTo().getSelectedItem() 
+		    + ":" + (String) theView.getBusManagementPanel().getCbMMTo().getSelectedItem();
+	    double distance = Double.parseDouble(theView.getBusManagementPanel().getTfDistance().getText());
+	    System.out.println(busID);
+	    try {
+		dbModel.updateBusRecord(busID,busName, busType, seatsOccupied, source, timing, destination, timingDestination, distance);
+		getAndShowBusTimeTable();
+		cleanBusMangementFields();
+	    } catch (Exception e) {
+		System.out.println(e.getMessage());
+		/* ERROR MESSEAGE POPING UP HERE*/
+	    }
 
 	}
     }
@@ -151,14 +176,18 @@ public class Controller {
 		theView.getBusManagementPanel().getCbBusType().setSelectedIndex(findBusType((String) busTimeTable.getValueAt(row, 2)));
 		theView.getBusManagementPanel().getTfSeatsOccupied().setText((String) busTimeTable.getValueAt(row, 3));
 		theView.getBusManagementPanel().getTfFrom().setText((String) busTimeTable.getValueAt(row, 4));
-		
+		theView.getBusManagementPanel().getCbHHFrom().setSelectedIndex(findHour(busTimeTable.getValueAt(row, 5)));
+		theView.getBusManagementPanel().getCbMMFrom().setSelectedIndex(findMinutes(busTimeTable.getValueAt(row, 5)));
 		theView.getBusManagementPanel().getTfTo().setText((String) busTimeTable.getValueAt(row, 6));
-		System.out.println((Float) busTimeTable.getValueAt(row, 8));
+		theView.getBusManagementPanel().getCbHHTo().setSelectedIndex(findHour(busTimeTable.getValueAt(row, 7)));
+		theView.getBusManagementPanel().getCbMMTo().setSelectedIndex(findMinutes(busTimeTable.getValueAt(row, 7)));
 		theView.getBusManagementPanel().getTfDistance().setText(Float.toString((Float) busTimeTable.getValueAt(row, 8)));
 	    }else{
 		///////////////////////////////////////////Exception  if there is no record in the table it will return -1
 	    }
 	}
+
+
     }
 
     public class RefreshTableListener implements ActionListener{
@@ -172,6 +201,7 @@ public class Controller {
      * @param myBusType
      * @return, int, index of the myBusType cell in the GeneralView.allowedBusTypes matrix. If not find 
      * returns 0 as default (also if the bus type you are looking for is at index 0)
+     * @see GeneralView
      */
     public int findBusType(String myBusType) {
 	int i = 0;
@@ -179,12 +209,48 @@ public class Controller {
 	    if(str.toLowerCase().equals(myBusType.toLowerCase())){
 		return i;
 	    }
+	    i++;
 	}
 	return i;
     }
 
+    /**
+     * Searches for index of the Hour cell in the GeneralView.hours matrix
+     * @param hours
+     * @return, int, index of the hours cell in the hours matrix. If not find 
+     * returns 0 as default (also if the bus type you are looking for is at index 0)
+     * @see GeneralView
+     */
+    public int findHour(Object hh) {
+	String HH = hh.toString().substring(0,2);
+	int i = 0;
+	for(String str : GeneralView.hours){
+	    if(str.toLowerCase().equals(HH)){
+		return i;
+	    }
+	    i++;
+	}
+	return i;
+    }
 
-
+    /**
+     * Searches for index of the minute cell in the GeneralView.minutes matrix
+     * @param MINUTES
+     * @return, int, index of the MINUTE cell in the MINUTES matrix. If not find 
+     * returns 0 as default (also if the bus type you are looking for is at index 0)
+     * @see GeneralView
+     */
+    public int findMinutes(Object time) {
+	String mm = time.toString().substring(3,5);
+	int i = 0;
+	for(String str : GeneralView.minutes){
+	    if(str.toLowerCase().equals(mm)){
+		return i;
+	    }
+	    i++;
+	}
+	return i;
+    }
 
 
 

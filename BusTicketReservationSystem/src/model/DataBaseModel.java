@@ -162,4 +162,29 @@ public class DataBaseModel {
 	PreparedStatement create = conn.prepareStatement("DELETE FROM bustimetable WHERE busId=" + Integer.toString(id));
 	create.executeUpdate();
     }
+    
+    public void updateBusRecord(int busId, String busName, String busType, String seatsOccupied, 
+	    String source, String timing, String destination, String timingDestination, double distance) throws Exception{
+	Connection conn = getConnectionToBusDataBase(); //MAKE A FIELD ??
+	PreparedStatement create = conn.prepareStatement("UPDATE bustimetable SET "
+		+ "busName = ?,"
+		+ "busType = ?,"
+		+ "seatsOccupied = ?,"
+		+ "source = ?,"
+		+ "timingSource = ?,"
+		+ "destination = ?,"
+		+ "timingDestination = ?,"
+		+ "distance = ? "
+		+ "WHERE busId = ?");
+	create.setString(1, busName);
+	create.setString(2, busType);
+	create.setString(3, seatsOccupied);
+	create.setString(4, source);
+	create.setString(5, timing);
+	create.setString(6, destination);
+	create.setString(7, timingDestination);
+	create.setString(8, Double.toString(distance));
+	create.setString(9, Integer.toString(busId));
+	create.executeUpdate();
+    }
 }
