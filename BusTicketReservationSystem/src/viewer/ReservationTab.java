@@ -4,6 +4,12 @@ import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.LocalDate;
+import java.time.Year;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
+import java.util.Date;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -19,6 +25,12 @@ public class ReservationTab extends JPanel{
     private JTextField DDField;
     private JTextField MMField;
     private JTextField YYYYField;
+    private JComboBox <String> fromDropDown;
+    private JComboBox <String> toDropDown;
+    private JButton btnGetBusDetails;
+    private JButton btnReset;
+    private JComboBox <String> busListDropDown;
+    private JButton btnLoadBuss;
 
     public ReservationTab(){
 	JLabel label = new JLabel("From:");
@@ -26,7 +38,7 @@ public class ReservationTab extends JPanel{
 	label.setBounds(10, 11, 46, 14);
 	this.add(label);
 
-	JComboBox fromDropDown = new JComboBox();
+	fromDropDown = new JComboBox<String>();
 	fromDropDown.setBounds(66, 10, 143, 20);
 	this.add(fromDropDown);
 
@@ -35,7 +47,7 @@ public class ReservationTab extends JPanel{
 	lblTo.setBounds(249, 13, 46, 14);
 	this.add(lblTo);
 
-	JComboBox toDropDown = new JComboBox();
+	toDropDown = new JComboBox<String>();
 	toDropDown.setBounds(288, 10, 157, 20);
 	this.add(toDropDown);
 
@@ -78,11 +90,11 @@ public class ReservationTab extends JPanel{
 	YYYYField.setDocument(new JTextFieldIntOnlyAndNumberOfCharFilter(4)); //numbers only and 4 characters only
 	this.add(YYYYField);
 
-	JButton btnGetBusDetails = new JButton("Get Bus Details");
+	btnGetBusDetails = new JButton("Get Bus Details");
 	btnGetBusDetails.setBounds(319, 54, 126, 23);
 	this.add(btnGetBusDetails);
 
-	JButton btnReset = new JButton("Reset");
+	btnReset = new JButton("Reset");
 	btnReset.setBounds(455, 54, 89, 23);
 	this.add(btnReset);
 
@@ -91,7 +103,7 @@ public class ReservationTab extends JPanel{
 	lblSelectBusFrom.setBounds(10, 102, 212, 14);
 	this.add(lblSelectBusFrom);
 
-	JComboBox busListDropDown = new JComboBox();
+	busListDropDown = new <String> JComboBox();
 	busListDropDown.setBounds(221, 101, 224, 20);
 	this.add(busListDropDown);
 
@@ -115,7 +127,7 @@ public class ReservationTab extends JPanel{
 	lblShowbustype.setBounds(78, 132, 88, 14);
 	this.add(lblShowbustype);
 
-	JButton btnLoadBuss = new JButton("Load");
+	btnLoadBuss = new JButton("Load");
 	btnLoadBuss.setBounds(455, 100, 89, 23);
 	this.add(btnLoadBuss);
 
@@ -125,6 +137,74 @@ public class ReservationTab extends JPanel{
 	this.add(layoutPanel);
 	layoutPanel.setLayout(new BorderLayout(0, 0));
 	layoutPanel.add(mercedes); //make a method out of it
+
+	/* default values*/
+	setDefaultDateOnReservation(); ////////////////////////// MOVE TO CONTROLLER ?
     }
 
+    public JTextField getDDField() {
+	return DDField;
+    }
+
+    public JTextField getMMField() {
+	return MMField;
+    }
+
+    public JTextField getYYYYField() {
+	return YYYYField;
+    }
+
+    public JComboBox <String> getFromDropDown() {
+	return fromDropDown;
+    }
+
+    public JComboBox <String> getToDropDown() {
+	return toDropDown;
+    }
+
+    /**
+     * Sets a default date on the reservation on today
+     */
+    public void setDefaultDateOnReservation(){
+	YYYYField.setText(Integer.toString(Year.now().getValue()));
+
+	Date date = new Date();
+	LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+	LocalDate tomorrow = localDate.plusDays(1);
+
+	int month = tomorrow.getMonthValue();
+	MMField.setText(getSSformat(month));
+
+	int day = tomorrow.getDayOfMonth();
+	DDField.setText(getSSformat(day));
+    }
+    
+    /**
+     * Formats months and days to two digit date (MM or DD) depending on the input
+     * @param monthOrDay
+     * @return, String, two digit MM or DD date
+     */
+    public String getSSformat(int monthOrDay){
+	if(monthOrDay < 10){
+	    return "0" + Integer.toString(monthOrDay);
+	}else{
+	    return Integer.toString(monthOrDay);
+	}
+    }
+
+    public JButton getBtnReset() {
+        return btnReset;
+    }
+    
+    public JComboBox<String> getBusListDropDown() {
+        return busListDropDown;
+    }
+
+    public JButton getBtnGetBusDetails() {
+	return btnGetBusDetails;
+    }
+
+    public JButton getBtnLoadBuss() {
+        return btnLoadBuss;
+    }
 }

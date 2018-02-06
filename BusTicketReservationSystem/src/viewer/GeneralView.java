@@ -54,6 +54,7 @@ public class GeneralView {
     public static final String[] allowedBusTypes = new String[] {"Mercedes 121"
     };
     private JTable table;
+    private JTabbedPane tabbedPane;
 
     
     /**
@@ -68,6 +69,7 @@ public class GeneralView {
      * Initialize the contents of the frame.
      */
     private void initialize() {
+	
 	Frame = new JFrame();
 	getFrame().setBounds(100, 100, 1079, 557);
 	getFrame().setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -87,7 +89,7 @@ public class GeneralView {
 	lblBusImage.setBounds(105, 11, 176, 104);
 	mainAplicationPanel.add(lblBusImage);
 	
-	JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+	tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 	tabbedPane.setBounds(10, 147, 1061, 361);
 	mainAplicationPanel.add(tabbedPane);
 	
@@ -144,5 +146,9 @@ public class GeneralView {
 
     public ReservationTab getReservationPanel() {
         return reservationPanel;
+    }
+
+    public JTabbedPane getTabbedPane() {
+        return tabbedPane;
     }
 }

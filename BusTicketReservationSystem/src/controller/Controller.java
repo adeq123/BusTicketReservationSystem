@@ -8,6 +8,8 @@ import java.util.Collections;
 import java.util.List;
 
 import javax.swing.JTable;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import model.DataBaseModel;
 import net.proteanit.sql.DbUtils;
@@ -31,6 +33,9 @@ public class Controller {
 	initializeListeners();
 	getAndShowBusTimeTable();
 	theView.getBusManagementPanel().getTfBusID().setText(suggestBusID().toString());
+	fillFromComboBox();
+	fillToComboBox();
+	;
     }
     /**
      * The method initialize the listeners for the application
@@ -42,6 +47,14 @@ public class Controller {
 	theView.getBusManagementPanel().getBtnFetchRecord().addActionListener(new FetchBusListener());
 	theView.getBusManagementPanel().getBtnDelete().addActionListener(new DeleteBusListener());
 	theView.getBusManagementPanel().getBtnUpdate().addActionListener(new UpdateBusListener());
+
+	/* Tabbed Pane from general view*/
+	theView.getTabbedPane().addChangeListener(new TabbedPaneChangeListener());
+
+	/* Reservation Panel*/
+	theView.getReservationPanel().getFromDropDown().addActionListener(new ToCbListener());
+	theView.getReservationPanel().getBtnGetBusDetails().addActionListener(new BtnGetBusDetailsListener());
+	theView.getReservationPanel().getBtnReset().addActionListener(new BtnResetListener());
     }
 
     /**
@@ -60,7 +73,7 @@ public class Controller {
 	}
     }
     /**
-     * The method cleans up all of the fields in Bus Management Tab and puts ot to defualt value
+     * The method cleans up all of the fields in Bus Management Tab and puts it to defualt value
      */
     public void cleanBusMangementFields() {
 	theView.getBusManagementPanel().getTfBusID().setText(suggestBusID().toString());
@@ -190,10 +203,75 @@ public class Controller {
 
     }
 
+    public class ToCbListener implements ActionListener{
+
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+	    fillToComboBox() ;
+	}
+
+    }
+
+    public class TabbedPaneChangeListener implements ChangeListener {
+
+	@Override
+	public void stateChanged(ChangeEvent arg0) {
+	    if(theView.getTabbedPane().getSelectedIndex() == theView.getTabbedPane().indexOfTab("Reservation")){ //if reservation panel is selected
+		fillFromComboBox();
+		fillToComboBox();
+	    }
+
+	}
+
+    }
+
     public class RefreshTableListener implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 	    getAndShowBusTimeTable();
+	}
+    }
+
+    public class BtnGetBusDetailsListener implements ActionListener {
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+	    String to = theView.getReservationPanel().getToDropDown().getSelectedItem().toString();
+	    String from = theView.getReservationPanel().getFromDropDown().getSelectedItem().toString();
+
+	    theView.getReservationPanel().getToDropDown().setEnabled(false);
+	    theView.getReservationPanel().getFromDropDown().setEnabled(false);
+	    theView.getReservationPanel().getYYYYField().setEnabled(false);
+	    theView.getReservationPanel().getDDField().setEnabled(false);
+	    theView.getReservationPanel().getMMField().setEnabled(false);
+	    theView.getReservationPanel().getBtnGetBusDetails().setEnabled(false);
+	    fillBusListDropDown(from, to);
+	    try {
+		dbModel.getBusDetials(from, to);
+	    } catch (Exception e1) {
+		e1.printStackTrace();
+	    }
+	}
+    }
+
+    public class BtnResetListener implements ActionListener {
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+	    String to = theView.getReservationPanel().getToDropDown().getSelectedItem().toString();
+	    String from = theView.getReservationPanel().getFromDropDown().getSelectedItem().toString();
+
+	    theView.getReservationPanel().getToDropDown().setEnabled(true);
+	    theView.getReservationPanel().getFromDropDown().setEnabled(true);
+	    theView.getReservationPanel().getYYYYField().setEnabled(true);
+	    theView.getReservationPanel().getDDField().setEnabled(true);
+	    theView.getReservationPanel().getMMField().setEnabled(true);
+	    theView.getReservationPanel().getBtnGetBusDetails().setEnabled(true);
+	    try {
+		dbModel.getBusDetials(from, to);
+	    } catch (Exception e1) {
+		e1.printStackTrace();
+	    }
 	}
     }
     /**
@@ -213,6 +291,7 @@ public class Controller {
 	}
 	return i;
     }
+
 
     /**
      * Searches for index of the Hour cell in the GeneralView.hours matrix
@@ -252,6 +331,67 @@ public class Controller {
 	return i;
     }
 
+    /**
+     * Fills from ComboBox with all possible source towns
+     */
+    public void fillFromComboBox(){
+	theView.getReservationPanel().getFromDropDown().removeAllItems();
+	try {
+	    ResultSet rs = dbModel.getBusTimeTable();
+	    String name = "";
+	    while(rs.next()){
+		name = rs.getString("source");
+		theView.getReservationPanel().getFromDropDown().addItem(name);
+	    }
+	    fillToComboBox();
+	} catch (Exception e) {
+	    /*Handle Error here!*/
+	    e.printStackTrace();
+	}
+    }
+
+    /**
+     * Fills To ComboBox with all possible desinations
+     */
 
 
+    public void fillToComboBox() {
+	theView.getReservationPanel().getToDropDown().removeAllItems();
+	try {
+	    ResultSet rs = dbModel.getBusTimeTable();
+	    String to = "";
+	    String from = "";
+	    while(rs.next()){
+		to = rs.getString("destination");
+		from = rs.getString("source");
+		if(theView.getReservationPanel().getFromDropDown().getSelectedItem().toString().toLowerCase().equals(from.toLowerCase())){//add only destinations available for the source
+		    theView.getReservationPanel().getToDropDown().addItem(to);
+		}
+	    }
+	} catch (Exception e) {
+	    /*Handle Error here!*/
+	    e.printStackTrace();
+	}
+
+    }
+    /**
+     * Fills To ComboBox with all possible buses leaving to the destination that day
+     */
+    public void fillBusListDropDown(String from, String to){
+	theView.getReservationPanel().getBusListDropDown().removeAllItems();
+	try {
+	    ResultSet rs = dbModel.getBusDetials(from, to);
+	    String company = "";
+	    String time = "";
+	    while(rs.next()){
+		company = rs.getString("busName");
+		time = rs.getString("timingSource");
+		theView.getReservationPanel().getBusListDropDown().addItem(company + " " + time);
+
+	    }
+	} catch (Exception e) {
+	    /*Handle Error here!*/
+	    e.printStackTrace();
+	}
+    }
 }

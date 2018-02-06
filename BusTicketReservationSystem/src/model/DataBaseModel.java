@@ -156,6 +156,11 @@ public class DataBaseModel {
 	ResultSet rs = create.executeQuery();
 	return rs;
     }
+    /**
+     * Deletes the bus from databasewith the given id
+     * @param id, int, id of bus to be deleted
+     * @throws Exception
+     */
     
     public void deleteBusWithID(int id) throws Exception{
 	Connection conn = getConnectionToBusDataBase(); //MAKE A FIELD ??
@@ -163,6 +168,19 @@ public class DataBaseModel {
 	create.executeUpdate();
     }
     
+    /**
+     * Updates the bus with a given ID
+     * @param busId, int, id of bus to be updated
+     * @param busName, String, new name of the bus
+     * @param busType, String, new bus type of the bus
+     * @param seatsOccupied, String, new list of seats occupied
+     * @param source, String, new source of the bus,
+     * @param timing, String, new leaving time
+     * @param destination, String, new destination
+     * @param timingDestination, String, new arrival time
+     * @param distance, double, new distance
+     * @throws Exception
+     */
     public void updateBusRecord(int busId, String busName, String busType, String seatsOccupied, 
 	    String source, String timing, String destination, String timingDestination, double distance) throws Exception{
 	Connection conn = getConnectionToBusDataBase(); //MAKE A FIELD ??
@@ -186,5 +204,18 @@ public class DataBaseModel {
 	create.setString(8, Double.toString(distance));
 	create.setString(9, Integer.toString(busId));
 	create.executeUpdate();
+    }
+    
+
+    /**
+     * Returns all the records with the given source and destination
+     * @return, ResultSet, all the records with the given source and destination
+     * @throws Exception
+     */
+    public ResultSet getBusDetials(String from, String to) throws Exception{
+	Connection conn = getConnectionToBusDataBase(); //MAKE A FIELD ??
+	PreparedStatement create = conn.prepareStatement("SELECT * FROM busTimeTable WHERE source='" + from + "'" + " AND destination='" + to + "'");
+	ResultSet rs = create.executeQuery();
+	return rs;
     }
 }
