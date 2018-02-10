@@ -1,24 +1,20 @@
 package viewer;
 
-import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 import java.awt.Color;
-import java.awt.Component;
-
 import javax.swing.JToggleButton;
 import javax.swing.ImageIcon;
 import java.util.LinkedList;
+import javax.swing.JLabel;
+import java.awt.Font;
 
-public class Mercedes121Layout extends JPanel implements BusLayout{
+public class Mercedes121Layout extends BusLayout{
 
-    /**
-     * 
-     */
+
     private static final long serialVersionUID = 1L;
     /**
      * This is a general class for building bus seats layouts of different types
      */
-    private LinkedList<JToggleButton> seatButtons;
 
     public Mercedes121Layout() {
 
@@ -110,7 +106,7 @@ public class Mercedes121Layout extends JPanel implements BusLayout{
 	seat29.setSelectedIcon(new ImageIcon(Mercedes121Layout.class.getResource("/viewer/occupiedSeat.png")));
 	seat29.setIcon(new ImageIcon(Mercedes121Layout.class.getResource("/viewer/freeSeat.png")));
 	seat29.setToolTipText("");
-	seat29.setBounds(415, 70, 35, 32);
+	seat29.setBounds(415, 77, 35, 32);
 	add(seat29);
 
 	JToggleButton seat26 = new JToggleButton("");
@@ -118,7 +114,7 @@ public class Mercedes121Layout extends JPanel implements BusLayout{
 	seat26.setSelectedIcon(new ImageIcon(Mercedes121Layout.class.getResource("/viewer/occupiedSeat.png")));
 	seat26.setIcon(new ImageIcon(Mercedes121Layout.class.getResource("/viewer/freeSeat.png")));
 	seat26.setToolTipText("");
-	seat26.setBounds(370, 70, 35, 32);
+	seat26.setBounds(370, 77, 35, 32);
 	add(seat26);
 
 	JToggleButton seat23 = new JToggleButton("");
@@ -126,7 +122,7 @@ public class Mercedes121Layout extends JPanel implements BusLayout{
 	seat23.setSelectedIcon(new ImageIcon(Mercedes121Layout.class.getResource("/viewer/occupiedSeat.png")));
 	seat23.setIcon(new ImageIcon(Mercedes121Layout.class.getResource("/viewer/freeSeat.png")));
 	seat23.setToolTipText("");
-	seat23.setBounds(325, 70, 35, 32);
+	seat23.setBounds(325, 77, 35, 32);
 	add(seat23);
 
 	JToggleButton seat20 = new JToggleButton("");
@@ -134,7 +130,7 @@ public class Mercedes121Layout extends JPanel implements BusLayout{
 	seat20.setSelectedIcon(new ImageIcon(Mercedes121Layout.class.getResource("/viewer/occupiedSeat.png")));
 	seat20.setIcon(new ImageIcon(Mercedes121Layout.class.getResource("/viewer/freeSeat.png")));
 	seat20.setToolTipText("");
-	seat20.setBounds(280, 70, 35, 32);
+	seat20.setBounds(280, 77, 35, 32);
 	add(seat20);
 
 	JToggleButton seat17 = new JToggleButton("");
@@ -142,7 +138,7 @@ public class Mercedes121Layout extends JPanel implements BusLayout{
 	seat17.setSelectedIcon(new ImageIcon(Mercedes121Layout.class.getResource("/viewer/occupiedSeat.png")));
 	seat17.setIcon(new ImageIcon(Mercedes121Layout.class.getResource("/viewer/freeSeat.png")));
 	seat17.setToolTipText("");
-	seat17.setBounds(235, 70, 35, 32);
+	seat17.setBounds(235, 77, 35, 32);
 	add(seat17);
 
 	JToggleButton seat14 = new JToggleButton("");
@@ -150,7 +146,7 @@ public class Mercedes121Layout extends JPanel implements BusLayout{
 	seat14.setSelectedIcon(new ImageIcon(Mercedes121Layout.class.getResource("/viewer/occupiedSeat.png")));
 	seat14.setIcon(new ImageIcon(Mercedes121Layout.class.getResource("/viewer/freeSeat.png")));
 	seat14.setToolTipText("");
-	seat14.setBounds(190, 70, 35, 32);
+	seat14.setBounds(190, 77, 35, 32);
 	add(seat14);
 
 	JToggleButton seat11 = new JToggleButton("");
@@ -158,7 +154,7 @@ public class Mercedes121Layout extends JPanel implements BusLayout{
 	seat11.setSelectedIcon(new ImageIcon(Mercedes121Layout.class.getResource("/viewer/occupiedSeat.png")));
 	seat11.setIcon(new ImageIcon(Mercedes121Layout.class.getResource("/viewer/freeSeat.png")));
 	seat11.setToolTipText("");
-	seat11.setBounds(145, 70, 35, 32);
+	seat11.setBounds(145, 77, 35, 32);
 	add(seat11);
 
 	JToggleButton seat8 = new JToggleButton("");
@@ -166,7 +162,7 @@ public class Mercedes121Layout extends JPanel implements BusLayout{
 	seat8.setSelectedIcon(new ImageIcon(Mercedes121Layout.class.getResource("/viewer/occupiedSeat.png")));
 	seat8.setIcon(new ImageIcon(Mercedes121Layout.class.getResource("/viewer/freeSeat.png")));
 	seat8.setToolTipText("");
-	seat8.setBounds(100, 70, 35, 32);
+	seat8.setBounds(100, 77, 35, 32);
 	add(seat8);
 
 	JToggleButton seat5 = new JToggleButton("");
@@ -174,7 +170,7 @@ public class Mercedes121Layout extends JPanel implements BusLayout{
 	seat5.setSelectedIcon(new ImageIcon(Mercedes121Layout.class.getResource("/viewer/occupiedSeat.png")));
 	seat5.setIcon(new ImageIcon(Mercedes121Layout.class.getResource("/viewer/freeSeat.png")));
 	seat5.setToolTipText("");
-	seat5.setBounds(55, 70, 35, 32);
+	seat5.setBounds(55, 77, 35, 32);
 	add(seat5);
 
 	JToggleButton seat2 = new JToggleButton("");
@@ -182,7 +178,7 @@ public class Mercedes121Layout extends JPanel implements BusLayout{
 	seat2.setSelectedIcon(new ImageIcon(Mercedes121Layout.class.getResource("/viewer/occupiedSeat.png")));
 	seat2.setIcon(new ImageIcon(Mercedes121Layout.class.getResource("/viewer/freeSeat.png")));
 	seat2.setToolTipText("");
-	seat2.setBounds(10, 70, 35, 32);
+	seat2.setBounds(10, 77, 35, 32);
 	add(seat2);
 
 	JToggleButton seat30 = new JToggleButton("");
@@ -190,7 +186,7 @@ public class Mercedes121Layout extends JPanel implements BusLayout{
 	seat30.setSelectedIcon(new ImageIcon(Mercedes121Layout.class.getResource("/viewer/occupiedSeat.png")));
 	seat30.setIcon(new ImageIcon(Mercedes121Layout.class.getResource("/viewer/freeSeat.png")));
 	seat30.setToolTipText("1");
-	seat30.setBounds(415, 153, 35, 32);
+	seat30.setBounds(415, 157, 35, 32);
 	add(seat30);
 
 	JToggleButton seat27 = new JToggleButton("");
@@ -198,7 +194,7 @@ public class Mercedes121Layout extends JPanel implements BusLayout{
 	seat27.setSelectedIcon(new ImageIcon(Mercedes121Layout.class.getResource("/viewer/occupiedSeat.png")));
 	seat27.setIcon(new ImageIcon(Mercedes121Layout.class.getResource("/viewer/freeSeat.png")));
 	seat27.setToolTipText("");
-	seat27.setBounds(370, 153, 35, 32);
+	seat27.setBounds(370, 157, 35, 32);
 	add(seat27);
 
 	JToggleButton seat24 = new JToggleButton("");
@@ -206,7 +202,7 @@ public class Mercedes121Layout extends JPanel implements BusLayout{
 	seat24.setSelectedIcon(new ImageIcon(Mercedes121Layout.class.getResource("/viewer/occupiedSeat.png")));
 	seat24.setIcon(new ImageIcon(Mercedes121Layout.class.getResource("/viewer/freeSeat.png")));
 	seat24.setToolTipText("");
-	seat24.setBounds(325, 153, 35, 32);
+	seat24.setBounds(325, 157, 35, 32);
 	add(seat24);
 
 	JToggleButton seat21 = new JToggleButton("");
@@ -215,7 +211,7 @@ public class Mercedes121Layout extends JPanel implements BusLayout{
 	seat21.setSelectedIcon(new ImageIcon(Mercedes121Layout.class.getResource("/viewer/occupiedSeat.png")));
 	seat21.setIcon(new ImageIcon(Mercedes121Layout.class.getResource("/viewer/freeSeat.png")));
 	seat21.setToolTipText("");
-	seat21.setBounds(280, 153, 35, 32);
+	seat21.setBounds(280, 157, 35, 32);
 	add(seat21);
 
 	JToggleButton seat18 = new JToggleButton("");
@@ -223,7 +219,7 @@ public class Mercedes121Layout extends JPanel implements BusLayout{
 	seat18.setSelectedIcon(new ImageIcon(Mercedes121Layout.class.getResource("/viewer/occupiedSeat.png")));
 	seat18.setIcon(new ImageIcon(Mercedes121Layout.class.getResource("/viewer/freeSeat.png")));
 	seat18.setToolTipText("");
-	seat18.setBounds(235, 153, 35, 32);
+	seat18.setBounds(235, 157, 35, 32);
 	add(seat18);
 
 	JToggleButton seat15 = new JToggleButton("");
@@ -231,7 +227,7 @@ public class Mercedes121Layout extends JPanel implements BusLayout{
 	seat15.setSelectedIcon(new ImageIcon(Mercedes121Layout.class.getResource("/viewer/occupiedSeat.png")));
 	seat15.setIcon(new ImageIcon(Mercedes121Layout.class.getResource("/viewer/freeSeat.png")));
 	seat15.setToolTipText("");
-	seat15.setBounds(190, 153, 35, 32);
+	seat15.setBounds(190, 157, 35, 32);
 	add(seat15);
 
 	JToggleButton seat12 = new JToggleButton("");
@@ -239,7 +235,7 @@ public class Mercedes121Layout extends JPanel implements BusLayout{
 	seat12.setSelectedIcon(new ImageIcon(Mercedes121Layout.class.getResource("/viewer/occupiedSeat.png")));
 	seat12.setIcon(new ImageIcon(Mercedes121Layout.class.getResource("/viewer/freeSeat.png")));
 	seat12.setToolTipText("");
-	seat12.setBounds(145, 153, 35, 32);
+	seat12.setBounds(145, 157, 35, 32);
 	add(seat12);
 
 	JToggleButton seat9 = new JToggleButton("");
@@ -247,7 +243,7 @@ public class Mercedes121Layout extends JPanel implements BusLayout{
 	seat9.setSelectedIcon(new ImageIcon(Mercedes121Layout.class.getResource("/viewer/occupiedSeat.png")));
 	seat9.setIcon(new ImageIcon(Mercedes121Layout.class.getResource("/viewer/freeSeat.png")));
 	seat9.setToolTipText("");
-	seat9.setBounds(100, 153, 35, 32);
+	seat9.setBounds(100, 157, 35, 32);
 	add(seat9);
 
 	JToggleButton seat6 = new JToggleButton("");
@@ -255,7 +251,7 @@ public class Mercedes121Layout extends JPanel implements BusLayout{
 	seat6.setSelectedIcon(new ImageIcon(Mercedes121Layout.class.getResource("/viewer/occupiedSeat.png")));
 	seat6.setIcon(new ImageIcon(Mercedes121Layout.class.getResource("/viewer/freeSeat.png")));
 	seat6.setToolTipText("");
-	seat6.setBounds(55, 153, 35, 32);
+	seat6.setBounds(55, 157, 35, 32);
 	add(seat6);
 
 	JToggleButton seat3 = new JToggleButton("");
@@ -263,39 +259,159 @@ public class Mercedes121Layout extends JPanel implements BusLayout{
 	seat3.setSelectedIcon(new ImageIcon(Mercedes121Layout.class.getResource("/viewer/occupiedSeat.png")));
 	seat3.setIcon(new ImageIcon(Mercedes121Layout.class.getResource("/viewer/freeSeat.png")));
 	seat3.setToolTipText("");
-	seat3.setBounds(10, 153, 35, 32);
+	seat3.setBounds(10, 157, 35, 32);
 	add(seat3);
 	
-    }
-    /**
-     * @see BusLayout interface
-     */
-    public LinkedList<JToggleButton> getAllSeatButtons(){
-	seatButtons = new LinkedList<JToggleButton>();
-	Component[] comp = this.getComponents();
-	for (int i = 0;i<comp.length;i++) {
-	    if (comp[i] instanceof JToggleButton) {
-		seatButtons.add((JToggleButton)comp[i]);
-	    }
-	}
-	return seatButtons;
+	JLabel label = new JLabel("1");
+	label.setFont(new Font("Tahoma", Font.BOLD, 14));
+	label.setBounds(20, 142, 16, 14);
+	add(label);
+	
+	JLabel label_1 = new JLabel("2");
+	label_1.setFont(new Font("Tahoma", Font.BOLD, 14));
+	label_1.setBounds(20, 62, 16, 14);
+	add(label_1);
+	
+	JLabel label_2 = new JLabel("3");
+	label_2.setFont(new Font("Tahoma", Font.BOLD, 14));
+	label_2.setBounds(22, 11, 16, 14);
+	add(label_2);
+	
+	JLabel label_3 = new JLabel("4");
+	label_3.setFont(new Font("Tahoma", Font.BOLD, 14));
+	label_3.setBounds(65, 142, 16, 14);
+	add(label_3);
+	
+	JLabel label_4 = new JLabel("5");
+	label_4.setFont(new Font("Tahoma", Font.BOLD, 14));
+	label_4.setBounds(65, 62, 16, 14);
+	add(label_4);
+	
+	JLabel label_5 = new JLabel("6");
+	label_5.setFont(new Font("Tahoma", Font.BOLD, 14));
+	label_5.setBounds(67, 11, 16, 14);
+	add(label_5);
+	
+	JLabel label_6 = new JLabel("7");
+	label_6.setFont(new Font("Tahoma", Font.BOLD, 14));
+	label_6.setBounds(110, 142, 16, 14);
+	add(label_6);
+	
+	JLabel label_7 = new JLabel("8");
+	label_7.setFont(new Font("Tahoma", Font.BOLD, 14));
+	label_7.setBounds(110, 62, 16, 14);
+	add(label_7);
+	
+	JLabel label_8 = new JLabel("9");
+	label_8.setFont(new Font("Tahoma", Font.BOLD, 14));
+	label_8.setBounds(112, 11, 16, 14);
+	add(label_8);
+	
+	JLabel label_9 = new JLabel("10");
+	label_9.setFont(new Font("Tahoma", Font.BOLD, 14));
+	label_9.setBounds(155, 142, 18, 14);
+	add(label_9);
+	
+	JLabel label_10 = new JLabel("11");
+	label_10.setFont(new Font("Tahoma", Font.BOLD, 14));
+	label_10.setBounds(155, 62, 25, 14);
+	add(label_10);
+	
+	JLabel label_11 = new JLabel("12");
+	label_11.setFont(new Font("Tahoma", Font.BOLD, 14));
+	label_11.setBounds(157, 11, 23, 14);
+	add(label_11);
+	
+	JLabel label_12 = new JLabel("13");
+	label_12.setFont(new Font("Tahoma", Font.BOLD, 14));
+	label_12.setBounds(200, 142, 25, 14);
+	add(label_12);
+	
+	JLabel label_13 = new JLabel("14");
+	label_13.setFont(new Font("Tahoma", Font.BOLD, 14));
+	label_13.setBounds(200, 62, 25, 14);
+	add(label_13);
+	
+	JLabel label_14 = new JLabel("15");
+	label_14.setFont(new Font("Tahoma", Font.BOLD, 14));
+	label_14.setBounds(202, 11, 23, 14);
+	add(label_14);
+	
+	JLabel label_15 = new JLabel("16");
+	label_15.setFont(new Font("Tahoma", Font.BOLD, 14));
+	label_15.setBounds(245, 142, 25, 14);
+	add(label_15);
+	
+	JLabel label_16 = new JLabel("17");
+	label_16.setFont(new Font("Tahoma", Font.BOLD, 14));
+	label_16.setBounds(245, 62, 25, 14);
+	add(label_16);
+	
+	JLabel label_17 = new JLabel("18");
+	label_17.setFont(new Font("Tahoma", Font.BOLD, 14));
+	label_17.setBounds(247, 11, 23, 14);
+	add(label_17);
+	
+	JLabel label_18 = new JLabel("19");
+	label_18.setFont(new Font("Tahoma", Font.BOLD, 14));
+	label_18.setBounds(290, 142, 25, 14);
+	add(label_18);
+	
+	JLabel label_19 = new JLabel("20");
+	label_19.setFont(new Font("Tahoma", Font.BOLD, 14));
+	label_19.setBounds(290, 62, 25, 14);
+	add(label_19);
+	
+	JLabel label_20 = new JLabel("21");
+	label_20.setFont(new Font("Tahoma", Font.BOLD, 14));
+	label_20.setBounds(292, 11, 23, 14);
+	add(label_20);
+	
+	JLabel label_21 = new JLabel("22");
+	label_21.setFont(new Font("Tahoma", Font.BOLD, 14));
+	label_21.setBounds(335, 142, 25, 14);
+	add(label_21);
+	
+	JLabel label_22 = new JLabel("23");
+	label_22.setFont(new Font("Tahoma", Font.BOLD, 14));
+	label_22.setBounds(335, 62, 25, 14);
+	add(label_22);
+	
+	JLabel label_23 = new JLabel("24");
+	label_23.setFont(new Font("Tahoma", Font.BOLD, 14));
+	label_23.setBounds(337, 11, 23, 14);
+	add(label_23);
+	
+	JLabel label_24 = new JLabel("25");
+	label_24.setFont(new Font("Tahoma", Font.BOLD, 14));
+	label_24.setBounds(380, 142, 25, 14);
+	add(label_24);
+	
+	JLabel label_25 = new JLabel("26");
+	label_25.setFont(new Font("Tahoma", Font.BOLD, 14));
+	label_25.setBounds(380, 62, 25, 14);
+	add(label_25);
+	
+	JLabel label_26 = new JLabel("27");
+	label_26.setFont(new Font("Tahoma", Font.BOLD, 14));
+	label_26.setBounds(382, 11, 23, 14);
+	add(label_26);
+	
+	JLabel label_27 = new JLabel("28");
+	label_27.setFont(new Font("Tahoma", Font.BOLD, 14));
+	label_27.setBounds(425, 142, 25, 14);
+	add(label_27);
+	
+	JLabel label_28 = new JLabel("29");
+	label_28.setFont(new Font("Tahoma", Font.BOLD, 14));
+	label_28.setBounds(425, 62, 25, 14);
+	add(label_28);
+	
+	JLabel label_29 = new JLabel("30");
+	label_29.setFont(new Font("Tahoma", Font.BOLD, 14));
+	label_29.setBounds(427, 11, 23, 14);
+	add(label_29);
 
     }
-    /**
-     * @see BusLayout interface
-     */
-    public JToggleButton getSelectedSeat(String seatName){
-	JToggleButton seat;
-	Component[] comp = this.getComponents();
-	for (int i = 0;i<comp.length;i++) {
-	    if (comp[i] instanceof JToggleButton) {
-		seat = (JToggleButton)comp[i];
-		if(seat.getName().equals(seatName)){
-		    return (JToggleButton)comp[i];
-		}
-	    }
-	}
-	return null;
-
-    }
+  
 }

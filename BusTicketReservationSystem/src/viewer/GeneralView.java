@@ -8,6 +8,7 @@ import java.awt.Font;
 import javax.swing.ImageIcon;
 import javax.swing.JTabbedPane;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JTextField;
 import controller.Controller;
 
@@ -31,7 +32,7 @@ public class GeneralView {
     private Controller theController; /* do I really need it ???*/
     private BusManagementTab busManagementPanel;
     private ReservationTab reservationPanel;
-    
+    private JFileChooser printer ;
     public static final String[] hours = new String[] {"00", "01", "02", "03", "04", "05", "06",
 	    "07", "08", "09", "10", "11", "12",
 	    "13", "14", "15", "16", "17", "18",
@@ -51,8 +52,8 @@ public class GeneralView {
 	        "59", "60"	    
 	        };
     
-    public static final String[] allowedBusTypes = new String[] {"Mercedes 121"
-    };
+    public static final String[] allowedBusTypes = new String[] {"Mercedes 121", "Mercedes Sprinter"
+    }; //must update addLayoutPanel() method in Reservation Tab if changes here :( as per now at least
     private JTable table;
     private JTabbedPane tabbedPane;
 
@@ -133,7 +134,11 @@ public class GeneralView {
 	JPanel AdminPanel = new JPanel();
 	tabbedPane.addTab("Administration", null, AdminPanel, null);
 	AdminPanel.setLayout(null);
+	printer = new JFileChooser();
+    }
 
+    public JFileChooser getPrinter() {
+        return printer;
     }
 
     public JFrame getFrame() {

@@ -1,22 +1,21 @@
 package viewer;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.time.Year;
 import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
 import java.util.Date;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.JToggleButton;
 import javax.swing.SwingConstants;
 
 public class ReservationTab extends JPanel{
@@ -31,7 +30,11 @@ public class ReservationTab extends JPanel{
     private JButton btnReset;
     private JComboBox <String> busListDropDown;
     private JButton btnLoadBuss;
-
+    private JLabel lblShowbustype;
+    private JPanel layoutPanel;
+    private JButton btnMakeReservation;
+    private BusLayout busLayout;
+    
     public ReservationTab(){
 	JLabel label = new JLabel("From:");
 	label.setFont(new Font("Tahoma", Font.BOLD, 14));
@@ -107,13 +110,7 @@ public class ReservationTab extends JPanel{
 	busListDropDown.setBounds(221, 101, 224, 20);
 	this.add(busListDropDown);
 
-	JButton btnMakeReservation = new JButton("Make Reservation");
-	btnMakeReservation.addActionListener(new ActionListener() {
-	    public void actionPerformed(ActionEvent arg0) { //MOVE TO CONTROLLER
-		PassengerWindow passenger = new PassengerWindow();
-		passenger.newScreen();
-	    }
-	});
+	btnMakeReservation = new JButton("Make Reservation");
 	btnMakeReservation.setBounds(187, 171, 143, 58);
 	this.add(btnMakeReservation);
 
@@ -122,7 +119,7 @@ public class ReservationTab extends JPanel{
 	lblBusType.setBounds(10, 127, 65, 20);
 	this.add(lblBusType);
 
-	JLabel lblShowbustype = new JLabel("showBusType");
+	lblShowbustype = new JLabel("showBusType");
 	lblShowbustype.setFont(new Font("Tahoma", Font.PLAIN, 14));
 	lblShowbustype.setBounds(78, 132, 88, 14);
 	this.add(lblShowbustype);
@@ -131,17 +128,49 @@ public class ReservationTab extends JPanel{
 	btnLoadBuss.setBounds(455, 100, 89, 23);
 	this.add(btnLoadBuss);
 
-	Mercedes121Layout mercedes = new Mercedes121Layout();
-	JPanel layoutPanel = new JPanel();
+	layoutPanel = new JPanel();
 	layoutPanel.setBounds(575, 31, 460, 198);
 	this.add(layoutPanel);
 	layoutPanel.setLayout(new BorderLayout(0, 0));
-	layoutPanel.add(mercedes); //make a method out of it
 
 	/* default values*/
 	setDefaultDateOnReservation(); ////////////////////////// MOVE TO CONTROLLER ?
-    }
+	busDetailsEnabled(false);
 
+    }
+    /**
+     * makes all of the components related to reservation detials enabled or disbaled 
+     * depending on input parameter
+     * @param enabled, boolean, true if you want to enable false otherwise
+     */
+    public void busDetailsEnabled(boolean enabled) {
+	btnReset.setEnabled(enabled);
+	busListDropDown.setEnabled(enabled);
+	btnLoadBuss.setEnabled(enabled);
+	btnMakeReservation.setEnabled(enabled);
+
+    }
+    /**
+     * makes all of the components related to reservation detials enabled or disbaled 
+     * depending on input parameter
+     * @param enabled, boolean, true if you want to enable false otherwise
+     */
+    public void busBasicInfoEnabled(boolean enabled) {
+	toDropDown.setEnabled(enabled);
+	fromDropDown.setEnabled(enabled);
+	YYYYField.setEnabled(enabled);
+	DDField.setEnabled(enabled);
+	MMField.setEnabled(enabled);
+	btnGetBusDetails.setEnabled(enabled);
+    }
+    /**
+     * Disables all components on the panel
+     */
+    public void disableWholePanel(){
+	for(Component c : this.getComponents()){
+	    c.setEnabled(false);
+	}
+    }
     public JTextField getDDField() {
 	return DDField;
     }
@@ -178,7 +207,7 @@ public class ReservationTab extends JPanel{
 	int day = tomorrow.getDayOfMonth();
 	DDField.setText(getSSformat(day));
     }
-    
+
     /**
      * Formats months and days to two digit date (MM or DD) depending on the input
      * @param monthOrDay
@@ -193,11 +222,11 @@ public class ReservationTab extends JPanel{
     }
 
     public JButton getBtnReset() {
-        return btnReset;
+	return btnReset;
     }
-    
+
     public JComboBox<String> getBusListDropDown() {
-        return busListDropDown;
+	return busListDropDown;
     }
 
     public JButton getBtnGetBusDetails() {
@@ -205,6 +234,45 @@ public class ReservationTab extends JPanel{
     }
 
     public JButton getBtnLoadBuss() {
-        return btnLoadBuss;
+	return btnLoadBuss;
     }
+
+    public JLabel getLblShowbustype() {
+	return lblShowbustype;
+    }
+    
+    /**
+     * Adds bus layout Panel to the tab
+     * @param layout
+     * @param seatsList
+     */
+    public void addLayoutPanel(String layout, String seatsList){
+	
+	if(layout.toLowerCase().equals(GeneralView.allowedBusTypes[0].toLowerCase())){
+	    busLayout = new Mercedes121Layout();
+	    busLayout.loadOccupiedSeats(seatsList);
+	    layoutPanel.add(busLayout); //make a method out of it
+	    layoutPanel.revalidate();
+	    layoutPanel.repaint();
+	}else if(layout.toLowerCase().equals(GeneralView.allowedBusTypes[1].toLowerCase())){
+	    busLayout = new Mercedes121Layout();
+	    busLayout.loadOccupiedSeats(seatsList);
+	    layoutPanel.add(busLayout); //make a method out of it
+	    layoutPanel.revalidate();
+	    layoutPanel.repaint();
+	}
+
+    }
+    public void deleteLayoutPanel(){
+	layoutPanel.removeAll();
+	layoutPanel.repaint();
+    }
+    public BusLayout getBusLayout() {
+        return busLayout;
+    }
+    public JButton getBtnMakeReservation() {
+        return btnMakeReservation;
+    }
+ 
+    
 }

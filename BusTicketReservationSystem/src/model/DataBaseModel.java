@@ -69,7 +69,7 @@ public class DataBaseModel {
 	try{
 	    Connection conn = getConnectionToBusDataBase();
 	    PreparedStatement create = conn.prepareStatement("CREATE TABLE IF NOT EXISTS ticketTable("
-		    + "ticketNumber int NOT NULL AUTO_INCREMENT, "
+		    + "ticketNumber BIGINT NOT NULL, "
 		    + "source varchar(255), "
 		    + "destination varchar(255), "
 		    + "date DATE, "
@@ -108,7 +108,6 @@ public class DataBaseModel {
 	    String source, String timing, String destination, String timingDestination, double distance) throws Exception{
 
 	Connection conn = getConnectionToBusDataBase();
-
 	PreparedStatement create = conn.prepareStatement("INSERT INTO busTimeTable ("
 		+ "busId, "
 		+ "busName, "
@@ -161,13 +160,13 @@ public class DataBaseModel {
      * @param id, int, id of bus to be deleted
      * @throws Exception
      */
-    
+
     public void deleteBusWithID(int id) throws Exception{
 	Connection conn = getConnectionToBusDataBase(); //MAKE A FIELD ??
 	PreparedStatement create = conn.prepareStatement("DELETE FROM bustimetable WHERE busId=" + Integer.toString(id));
 	create.executeUpdate();
     }
-    
+
     /**
      * Updates the bus with a given ID
      * @param busId, int, id of bus to be updated
@@ -205,7 +204,7 @@ public class DataBaseModel {
 	create.setString(9, Integer.toString(busId));
 	create.executeUpdate();
     }
-    
+
 
     /**
      * Returns all the records with the given source and destination
@@ -217,5 +216,81 @@ public class DataBaseModel {
 	PreparedStatement create = conn.prepareStatement("SELECT * FROM busTimeTable WHERE source='" + from + "'" + " AND destination='" + to + "'");
 	ResultSet rs = create.executeQuery();
 	return rs;
+    }
+
+    /**
+     * Returns the bus with a given id (id parameter is unique in the data base)
+     * @return, ResultSet, record of bus with a specific id
+     * @throws Exception
+     */
+    public ResultSet getBusWithID(String id) throws Exception{
+	Connection conn = getConnectionToBusDataBase(); //MAKE A FIELD ??
+	PreparedStatement create = conn.prepareStatement("SELECT * FROM busTimeTable WHERE busId=" + Integer.parseInt(id));
+	ResultSet rs = create.executeQuery();
+	return rs;
+    }
+
+    /**
+     * Adds new ticket to the database
+     * @throws Exception
+     */
+    public void addNewTicket(String ticketNumber, String source, String destination, String date, String timing, String distance, String cost, String busId,
+	    String seat, String passengerName, String mobile, String email) throws Exception{
+	Connection conn = getConnectionToBusDataBase(); //MAKE A FIELD ??
+	PreparedStatement create = conn.prepareStatement("INSERT INTO tickettable ("
+		+ "ticketNumber, "
+		+ "source, "
+		+ "destination, "
+		+ "date, "
+		+ "timing, "
+		+ "distance, "
+		+ "cost, "
+		+ "busId, "
+		+ "seat, "
+		+ "passengerName, "
+		+ "mobile, "
+		+ "email) "
+		+ "values ( "
+		+ "'" + Long.parseLong(ticketNumber) + "',"
+		+ "'" + source + "'," 
+		+ "'" + destination + "',"
+		+ "STR_TO_DATE('" + date +"', '%d/%m/%Y'),"
+		+ "'" + timing + "',"
+		+ "'" + Float.parseFloat(distance) + "',"
+		+ "'" + Float.parseFloat(cost) + "',"
+		+ "'" + Integer.parseInt(busId) + "',"
+		+ "'" + Integer.parseInt(seat) + "'," 
+		+ "'" + passengerName + "'," 
+		+ "'" + mobile + "'," 
+		+ "'" + email + "'" 
+		+ ")"); 
+	create.executeUpdate();
+    }
+
+    /**  DELETE???
+     * The method returns busId column
+     * @return, ResultSet, busId column
+     * @throws Exception
+     */
+    public ResultSet getAllTicketNumbers() throws Exception{
+	Connection conn = getConnectionToBusDataBase(); //MAKE A FIELD ??
+	PreparedStatement create = conn.prepareStatement("SELECT ticketNumber FROM tickettable");
+	ResultSet rs = create.executeQuery();
+	return rs;
+    }
+    /**
+     * 
+     * @param busId
+     * @param seatsOccupied
+
+     */
+    public void updateBusSeats(int busId,  String seatsOccupied) throws Exception{
+	Connection conn = getConnectionToBusDataBase(); //MAKE A FIELD ??
+	PreparedStatement create = conn.prepareStatement("UPDATE bustimetable SET "
+		+ "seatsOccupied = ?"
+		+ "WHERE busId = ?");
+	create.setString(1, seatsOccupied);
+	create.setInt(2, busId);
+	create.executeUpdate();
     }
 }

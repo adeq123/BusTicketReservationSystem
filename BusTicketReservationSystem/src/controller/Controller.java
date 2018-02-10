@@ -1,19 +1,35 @@
 package controller;
 
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.io.IOException;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import javax.swing.JToggleButton;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import com.itextpdf.text.DocumentException;
+
 import model.DataBaseModel;
+import model.EmailMessage;
 import net.proteanit.sql.DbUtils;
 import viewer.GeneralView;
+import viewer.PassengerWindow;
 /**
  * This class models and Controller part of the application designed in MVC concept. 
  * It is responsible for all the communication between the Model and Viewer modeling the application logic at the same time.
@@ -22,20 +38,26 @@ import viewer.GeneralView;
  */
 public class Controller {
 
+    private static final Integer DEFAULT_BUS_ID = 100;
+    private static final Integer DEFAULT_TICKET_ID = 100;
     private GeneralView theView;
     private DataBaseModel dbModel;
+    private PassengerWindow passenger;
+    private String seatNumberSelected;
 
     public void start(){
 	theView = new GeneralView (this);
 	dbModel = new DataBaseModel();
 	theView.getFrame().setVisible(true);
 
+	passenger = new PassengerWindow();
+	seatNumberSelected = null;
 	initializeListeners();
 	getAndShowBusTimeTable();
 	theView.getBusManagementPanel().getTfBusID().setText(suggestBusID().toString());
 	fillFromComboBox();
 	fillToComboBox();
-	;
+
     }
     /**
      * The method initialize the listeners for the application
@@ -52,11 +74,23 @@ public class Controller {
 	theView.getTabbedPane().addChangeListener(new TabbedPaneChangeListener());
 
 	/* Reservation Panel*/
-	theView.getReservationPanel().getFromDropDown().addActionListener(new ToCbListener());
+	theView.getReservationPanel().getFromDropDown().addActionListener(new FromCBSelectedListener());
 	theView.getReservationPanel().getBtnGetBusDetails().addActionListener(new BtnGetBusDetailsListener());
 	theView.getReservationPanel().getBtnReset().addActionListener(new BtnResetListener());
+	theView.getReservationPanel().getBtnLoadBuss().addActionListener(new BtnLoadListener());
+	theView.getReservationPanel().getBtnMakeReservation().addActionListener(new BtnMakeReservationListener());
+
+	/*Passenger details*/
+
     }
 
+    private void addListenerToTheSeatButtons() {
+	SeatButtonPressed seatPressed = new SeatButtonPressed();
+	for(JToggleButton seat : theView.getReservationPanel().getBusLayout().getAllSeatButtons()){
+	    seat.addItemListener(seatPressed);
+	}
+
+    }
     /**
      * The method takes all of the records in corresponding bus time table database and displays it in BusManagementTab
      */
@@ -68,7 +102,7 @@ public class Controller {
 	    busTimeTable.setModel(DbUtils.resultSetToTableModel(rs));
 	    busTimeTable.changeSelection(0, 0, false, false); //default selection on first record
 	} catch (Exception e) {
-	    /* ERROR MESSEAGE POPING UP HERE*/
+	    JOptionPane.showMessageDialog(theView.getFrame(),"Problem with the Data Base check connection");
 	    System.out.println(e.getMessage());
 	}
     }
@@ -96,14 +130,19 @@ public class Controller {
     private Integer suggestBusID() {
 	try {
 	    ResultSet rs = dbModel.getAllBusID();
-	    ArrayList<ArrayList<Integer>> idList = (ArrayList<ArrayList<Integer>>) DbUtils.resultSetToNestedList(rs);
-	    return  idList.get(idList.size() - 1).get(0) + 1;
+	    if(rs.next()){
+		ArrayList<ArrayList<Integer>> idList = (ArrayList<ArrayList<Integer>>) DbUtils.resultSetToNestedList(rs);
+		return  idList.get(idList.size() - 1).get(0) + 1;
+	    }else{
+		return DEFAULT_BUS_ID;
+	    }
 	} catch (Exception e) {
-	    /* ERROR MESSEAGE POPING UP HERE*/
+	    JOptionPane.showMessageDialog(theView.getFrame(),"Problem with the Data Base check connection");
 	    System.out.println(e.getMessage());
 	}
 	return null;
     }
+
     /* Bus Management tab listeners*/
     public class AddBusListener implements ActionListener{
 	@Override
@@ -127,7 +166,7 @@ public class Controller {
 		cleanBusMangementFields();
 	    } catch (Exception e) {
 		System.out.println(e.getMessage());
-		/* ERROR MESSEAGE POPING UP HERE*/
+		JOptionPane.showMessageDialog(theView.getFrame(),"Problem with the Data Base check connection");
 	    }
 
 	}
@@ -141,12 +180,12 @@ public class Controller {
 		getAndShowBusTimeTable();
 		cleanBusMangementFields();
 	    } catch (NumberFormatException e) {
-		// TODO Auto-generated catch block
+		JOptionPane.showMessageDialog(theView.getFrame(),"Number Format Exception! use the correct input");
 		e.printStackTrace();
 	    } catch (Exception e) {
-		// TODO Auto-generated catch block
+		JOptionPane.showMessageDialog(theView.getFrame(),"Problem with the Data Base check connection");
 		e.printStackTrace();
-		/* ERROR MESSEAGE POPING UP HERE*/
+
 	    }
 	}
     }
@@ -172,7 +211,7 @@ public class Controller {
 		cleanBusMangementFields();
 	    } catch (Exception e) {
 		System.out.println(e.getMessage());
-		/* ERROR MESSEAGE POPING UP HERE*/
+		JOptionPane.showMessageDialog(theView.getFrame(),"Problem with the Data Base check connection");
 	    }
 
 	}
@@ -196,14 +235,18 @@ public class Controller {
 		theView.getBusManagementPanel().getCbMMTo().setSelectedIndex(findMinutes(busTimeTable.getValueAt(row, 7)));
 		theView.getBusManagementPanel().getTfDistance().setText(Float.toString((Float) busTimeTable.getValueAt(row, 8)));
 	    }else{
-		///////////////////////////////////////////Exception  if there is no record in the table it will return -1
+		JOptionPane.showMessageDialog(theView.getFrame(),"Not possible to fetch the bus. Refresh and try again");
+
 	    }
 	}
-
-
     }
 
-    public class ToCbListener implements ActionListener{
+    /*
+     * Reservation Panel Listeners
+     * @author ADRO
+     *
+     */
+    public class FromCBSelectedListener implements ActionListener{
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
@@ -239,16 +282,14 @@ public class Controller {
 	    String to = theView.getReservationPanel().getToDropDown().getSelectedItem().toString();
 	    String from = theView.getReservationPanel().getFromDropDown().getSelectedItem().toString();
 
-	    theView.getReservationPanel().getToDropDown().setEnabled(false);
-	    theView.getReservationPanel().getFromDropDown().setEnabled(false);
-	    theView.getReservationPanel().getYYYYField().setEnabled(false);
-	    theView.getReservationPanel().getDDField().setEnabled(false);
-	    theView.getReservationPanel().getMMField().setEnabled(false);
-	    theView.getReservationPanel().getBtnGetBusDetails().setEnabled(false);
+	    theView.getReservationPanel().busBasicInfoEnabled(false);
+	    theView.getReservationPanel().busDetailsEnabled(true);
+
 	    fillBusListDropDown(from, to);
 	    try {
 		dbModel.getBusDetials(from, to);
 	    } catch (Exception e1) {
+		JOptionPane.showMessageDialog(theView.getFrame(),"Problem with the Data Base check connection");
 		e1.printStackTrace();
 	    }
 	}
@@ -261,19 +302,210 @@ public class Controller {
 	    String to = theView.getReservationPanel().getToDropDown().getSelectedItem().toString();
 	    String from = theView.getReservationPanel().getFromDropDown().getSelectedItem().toString();
 
-	    theView.getReservationPanel().getToDropDown().setEnabled(true);
-	    theView.getReservationPanel().getFromDropDown().setEnabled(true);
-	    theView.getReservationPanel().getYYYYField().setEnabled(true);
-	    theView.getReservationPanel().getDDField().setEnabled(true);
-	    theView.getReservationPanel().getMMField().setEnabled(true);
-	    theView.getReservationPanel().getBtnGetBusDetails().setEnabled(true);
+	    theView.getReservationPanel().busBasicInfoEnabled(true);
+	    theView.getReservationPanel().deleteLayoutPanel();
+	    theView.getReservationPanel().busDetailsEnabled(false);
 	    try {
 		dbModel.getBusDetials(from, to);
 	    } catch (Exception e1) {
+		JOptionPane.showMessageDialog(theView.getFrame(),"Problem with the Data Base check connection");
 		e1.printStackTrace();
 	    }
 	}
     }
+
+
+    public class BtnLoadListener implements ActionListener {
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+	    String id = theView.getReservationPanel().getBusListDropDown().getSelectedItem().toString().split(" ")[0];
+	    updateBusLayoutAccordingToDatabase(id);
+	    addListenerToTheSeatButtons();
+	}
+
+    }
+
+    public class BtnMakeReservationListener implements ActionListener {
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+	    if(seatNumberSelected != null){
+		passenger.newScreen(new BtnPassengerPanelCancelListener(), new BtnPassengerPanelSubmitListener(), passenger);
+		theView.getReservationPanel().disableWholePanel();
+		fillInTicketInfoOnPassengerScreen();
+
+		/*close = cancel*/
+		passenger.getFrame().addWindowListener(new java.awt.event.WindowAdapter() {
+		    public void windowClosing(java.awt.event.WindowEvent e) {
+			theView.getReservationPanel().busDetailsEnabled(true);
+			e.getWindow().dispose();
+		    }
+		});
+	    }else{
+		JOptionPane.showMessageDialog(theView.getFrame(),"Seat must be selected");
+	    }
+	}
+    }
+
+    public void fillInTicketInfoOnPassengerScreen() {
+	String date = theView.getReservationPanel().getDDField().getText()
+		+ "/" + theView.getReservationPanel().getMMField().getText()
+		+ "/" + theView.getReservationPanel().getYYYYField().getText();
+	passenger.getLblShowdate().setText(date);
+	passenger.getLblShowseat().setText(seatNumberSelected);
+
+	String id = theView.getReservationPanel().getBusListDropDown().getSelectedItem().toString().split(" ")[0];
+	try {
+	    ResultSet theBus = dbModel.getBusWithID(id);
+	    if(theBus.next()){
+
+		String arrivalTime = theBus.getString("timingDestination");
+		String sourceTime = theBus.getString("timingSource");
+		String from = theBus.getString("source");
+		String to = theBus.getString("destination");
+		String distance = theBus.getString("distance");
+
+		passenger.getLblShowarrivaltime().setText(arrivalTime);
+		passenger.getLblShowleavingtime().setText(sourceTime);
+		passenger.getLblShowbusid().setText(id);
+		passenger.getLblShowfrom().setText(from);
+		passenger.getLblShowto().setText(to);
+		passenger.getLblShowdistance().setText(distance);
+
+	    }
+	} catch (Exception e1) {
+	    JOptionPane.showMessageDialog(theView.getFrame(),"Problem with the Data Base check connection");
+	    e1.printStackTrace();
+	}
+    }
+
+    /*Split this method ??*/
+    public class BtnPassengerPanelSubmitListener implements ActionListener {
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+	    String passengerName = "";
+	    String email = "";
+	    String mobile = "";
+
+	    passengerName = passenger.getTxtName().getText();
+	    email = passenger.getTxtEmailAdress().getText();
+	    mobile = passenger.getTxtMobileNumber().getText();
+
+	    /* Error handling*/
+	    if(passengerName.isEmpty() || email.isEmpty() || mobile.isEmpty()){
+		JOptionPane.showMessageDialog(passenger.getFrame(),"Name, e-mail and phone number must be entered!");
+	    }else{
+		if(email.contains("@")){
+		    //correct input
+		    String source = passenger.getLblShowfrom().getText();
+		    String destination = passenger.getLblShowto().getText();
+		    String date = passenger.getLblShowdate().getText();
+		    String timing = passenger.getLblShowleavingtime().getText();
+		    String distance = passenger.getLblShowdistance().getText();
+		    String cost = Double.toString(model.BusTicketCalculations.getTicketPrice(Double.parseDouble(distance)));
+		    String busId = passenger.getLblShowbusid().getText();
+		    String seat = passenger.getLblShowseat().getText();
+		    String ticketNumber = Long.toString(getUniqueID());
+		    try {
+			//save to db
+			dbModel.addNewTicket(ticketNumber, source, destination, date, timing, distance, cost, busId, seat, passengerName, mobile, email);
+
+			// print pdf
+			String fileName = null;
+			int returnVal = theView.getPrinter().showSaveDialog(null);
+			if(returnVal == JFileChooser.APPROVE_OPTION) {
+			    fileName = theView.getPrinter().getSelectedFile().getAbsolutePath();
+			    try {
+				Image ticketImage = model.PDFPrinter.getImageFromPanel(passenger.getFrame());
+				model.PDFPrinter.printCwToPdf(ticketImage, fileName, ticketNumber + ".pdf");
+
+				//email ticket
+
+				String textTicket = "Your purchase comfirmation: \n"+
+					"Ticket number: " + ticketNumber + "\n"+
+					"From: " + source + "\n"+
+					"To: " + destination + "\n"+
+					"Date: " + date + "\n"+
+					"Leaving " + timing + "\n"+
+					"Distance: " + distance + "\n"+
+					"Price: " + cost + "\n"+
+					"Bus ID " + busId + "\n"+
+					"Seat number: " + seat + "\n"+
+					"Passenger name: " + passengerName + "\n"+
+					"Mob.: " + mobile + "\n"
+					;
+				LinkedList <String> to = new LinkedList<String>();
+				to.add(email);
+				EmailMessage wiadomosc = new EmailMessage.EmailBuilder("marek.czwartek@wp.pl", to)
+					.addSubject("Ticket purchase confirmation " + ticketNumber)
+					.addContent(textTicket)
+					.build();
+
+				wiadomosc.send("adrianroguski1990", "smtp.wp.pl", 465);
+
+			    } catch (DocumentException  e1) {
+				JOptionPane.showMessageDialog(theView.getFrame(), "Problem with the file you want write to. Please check the file!");
+				e1.printStackTrace();
+			    }catch (IOException   e2) {
+				JOptionPane.showMessageDialog(theView.getFrame(), "Problem with image you want to print out!");
+				e2.printStackTrace();
+			    }catch(javax.mail.internet.AddressException me){
+				JOptionPane.showMessageDialog(theView.getFrame(), "Email adress incorrect!");
+				me.printStackTrace();
+			    }
+
+			}
+			//update DB
+			updateSeatsInTheBus(busId, seat);
+
+		    } catch (Exception e1) {
+			JOptionPane.showMessageDialog(passenger.getFrame(),"Problem with the Data Base check connection");
+			e1.printStackTrace();
+		    }
+
+		    // close the window and go to default state
+		    new BtnPassengerPanelCancelListener().actionPerformed(null);
+		    new BtnResetListener().actionPerformed(null);
+
+		}else{
+		    JOptionPane.showMessageDialog(passenger.getFrame(),"Incorrect e-mail adress");
+		}
+	    }
+	}
+
+    }
+    public class BtnPassengerPanelCancelListener implements ActionListener {
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+	    theView.getReservationPanel().busDetailsEnabled(true);
+	    passenger.getFrame().dispatchEvent(new WindowEvent(passenger.getFrame(), WindowEvent.WINDOW_CLOSING));
+	}
+
+    }
+
+
+    /**
+     * The method updates the bus layout view according to seats occupied list in data base
+     * @param id
+     */
+    public void updateBusLayoutAccordingToDatabase(String id) {
+	try {
+	    ResultSet theBus = dbModel.getBusWithID(id);
+	    if(theBus.next()){
+		String busType = theBus.getString("busType");
+		String seatsOccupied = theBus.getString("seatsOccupied");
+		theView.getReservationPanel().getLblShowbustype().setText(busType);
+		theView.getReservationPanel().addLayoutPanel(busType, seatsOccupied);
+	    }
+	} catch (Exception e1) {
+	    JOptionPane.showMessageDialog(theView.getFrame(),"Problem with the Data Base check connection");
+	    e1.printStackTrace();
+	}
+    }
+
     /**
      * Searches for index of the myBusType cell in the GeneralView.allowedBusTypes matrix
      * @param myBusType
@@ -335,7 +567,10 @@ public class Controller {
      * Fills from ComboBox with all possible source towns
      */
     public void fillFromComboBox(){
-	theView.getReservationPanel().getFromDropDown().removeAllItems();
+	if(theView.getReservationPanel().getFromDropDown().getItemCount() > 0){
+	    theView.getReservationPanel().getFromDropDown().removeAllItems();
+	}
+
 	try {
 	    ResultSet rs = dbModel.getBusTimeTable();
 	    String name = "";
@@ -343,36 +578,42 @@ public class Controller {
 		name = rs.getString("source");
 		theView.getReservationPanel().getFromDropDown().addItem(name);
 	    }
-	    fillToComboBox();
+	    
 	} catch (Exception e) {
-	    /*Handle Error here!*/
+	    JOptionPane.showMessageDialog(theView.getFrame(),"Problem with the Data Base check connection");
 	    e.printStackTrace();
 	}
+
     }
 
     /**
-     * Fills To ComboBox with all possible desinations
+     * Fills To ComboBox with all possible destinations
      */
 
 
     public void fillToComboBox() {
-	theView.getReservationPanel().getToDropDown().removeAllItems();
-	try {
-	    ResultSet rs = dbModel.getBusTimeTable();
-	    String to = "";
-	    String from = "";
-	    while(rs.next()){
-		to = rs.getString("destination");
-		from = rs.getString("source");
-		if(theView.getReservationPanel().getFromDropDown().getSelectedItem().toString().toLowerCase().equals(from.toLowerCase())){//add only destinations available for the source
-		    theView.getReservationPanel().getToDropDown().addItem(to);
-		}
+	if(theView.getReservationPanel().getFromDropDown().getItemCount() > 0){
+	    theView.getReservationPanel().getToDropDown().removeAllItems();
+	    if(theView.getReservationPanel().getFromDropDown().getSelectedItem() == null){
+		System.out.print(theView.getReservationPanel().getFromDropDown().getItemCount() + "!!!!!!!!!!");
 	    }
-	} catch (Exception e) {
-	    /*Handle Error here!*/
-	    e.printStackTrace();
-	}
+	    try {
+		ResultSet rs = dbModel.getBusTimeTable();
+		String to = "";
+		String from = "";
+		while(rs.next()){
+		    to = rs.getString("destination");
+		    from = rs.getString("source");
 
+		    if(theView.getReservationPanel().getFromDropDown().getSelectedItem().toString().toLowerCase().equals(from.toLowerCase())){//add only destinations available for the source
+			theView.getReservationPanel().getToDropDown().addItem(to);
+		    }
+		}
+	    } catch (Exception e) {
+		JOptionPane.showMessageDialog(theView.getFrame(),"Problem with the Data Base check connection");
+		e.printStackTrace();
+	    }
+	}
     }
     /**
      * Fills To ComboBox with all possible buses leaving to the destination that day
@@ -381,17 +622,62 @@ public class Controller {
 	theView.getReservationPanel().getBusListDropDown().removeAllItems();
 	try {
 	    ResultSet rs = dbModel.getBusDetials(from, to);
+	    String busID = "";
 	    String company = "";
 	    String time = "";
 	    while(rs.next()){
+		busID = rs.getString("busId");
 		company = rs.getString("busName");
 		time = rs.getString("timingSource");
-		theView.getReservationPanel().getBusListDropDown().addItem(company + " " + time);
-
+		theView.getReservationPanel().getBusListDropDown().addItem(busID + " " +company + " " + time);
 	    }
 	} catch (Exception e) {
-	    /*Handle Error here!*/
+	    JOptionPane.showMessageDialog(theView.getFrame(),"Problem with the Data Base check connection");
 	    e.printStackTrace();
 	}
+    }
+
+    /**
+     * Listener for seat ToggleButton on bus layout
+     */
+    public class SeatButtonPressed implements ItemListener{
+	@Override
+	public void itemStateChanged(ItemEvent event) {
+	    if(event.getStateChange() == ItemEvent.SELECTED){
+		JToggleButton buttonPressed = (JToggleButton) event.getItem();
+		theView.getReservationPanel().getBusLayout().disableTheRestOfButtons(buttonPressed);
+		seatNumberSelected = buttonPressed.getName().substring(4);
+	    }else if(event.getStateChange() == ItemEvent.DESELECTED){
+		//theView.getReservationPanel().getBusLayout().enableAllSeatButtons();
+		String id = theView.getReservationPanel().getBusListDropDown().getSelectedItem().toString().split(" ")[0];
+		theView.getReservationPanel().deleteLayoutPanel();
+		updateBusLayoutAccordingToDatabase(id);
+		addListenerToTheSeatButtons();
+		seatNumberSelected = null;
+	    }
+	}
+    }
+
+    /**
+     * Generates the unique ID based on time. 
+     * @return long, Number of ms since 1970. Unique ID used for file naming
+     */
+    public long getUniqueID() {
+	return new Date().getTime();
+    }
+    /**
+     * Updates the bus record with new seat
+     * @param id
+     * @param seat
+     * @throws Exception
+     */
+    public void updateSeatsInTheBus(String id, String seat) throws Exception{
+	ResultSet rs = dbModel.getBusWithID(id);
+	if(rs.next()){
+	    String newSeats = rs.getString("seatsOccupied");
+	    newSeats = newSeats + ";" + seat;
+	    dbModel.updateBusSeats(Integer.parseInt(id), newSeats);
+	}
+
     }
 }

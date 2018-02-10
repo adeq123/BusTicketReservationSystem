@@ -4,35 +4,56 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
+
 import java.awt.Font;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-public class PassengerWindow {
+public class PassengerWindow{
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -3002449385948168650L;
     private JFrame frame;
     private JTextField txtName;
     private JTextField txtMobileNumber;
     private JTextField txtEmailAdress;
+    private JButton btnSubmit;
+    private JButton btnCancel;
+    private JLabel lblShowdate;
+    private JLabel lblShowbusid;
+    private JLabel lblShowfrom;
+    private JLabel lblShowto;
+    private JLabel lblShowleavingtime;
+    private JLabel lblShowarrivaltime;
+    private JLabel lblShowseat;
+    private JLabel lblShowdistance;
+    private JLabel lblShowTicketNumber;
+
 
     /**
      * Launch the application.
      */
-    public void newScreen() {
+    public void newScreen(ActionListener cancel, ActionListener submit, PassengerWindow window) {
 	EventQueue.invokeLater(new Runnable() {
 	    public void run() {
 		try {
-		    PassengerWindow window = new PassengerWindow();
 		    window.frame.setVisible(true);
+		    window.btnCancel.addActionListener(cancel);
+		    window.btnSubmit.addActionListener(submit);
+		    
 		} catch (Exception e) {
 		    e.printStackTrace();
 		}
 	    }
 	});
+	
     }
-
+    
     /**
      * Create the application.
      */
@@ -45,7 +66,7 @@ public class PassengerWindow {
      */
     private void initialize() {
 	frame = new JFrame();
-	frame.setBounds(100, 100, 361, 365);
+	frame.setBounds(100, 100, 362, 449);
 	frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	frame.getContentPane().setLayout(null);
 	
@@ -86,75 +107,160 @@ public class PassengerWindow {
 	
 	JLabel lblPassengerDetails = new JLabel("Passenger details:");
 	lblPassengerDetails.setFont(new Font("Tahoma", Font.BOLD, 14));
-	lblPassengerDetails.setBounds(26, 180, 128, 20);
+	lblPassengerDetails.setBounds(10, 234, 128, 20);
 	frame.getContentPane().add(lblPassengerDetails);
 	
 	JLabel lblName = new JLabel("Name:");
 	lblName.setFont(new Font("Tahoma", Font.PLAIN, 14));
-	lblName.setBounds(26, 211, 46, 14);
+	lblName.setBounds(10, 265, 46, 14);
 	frame.getContentPane().add(lblName);
 	
 	JLabel lblMob = new JLabel("Mob.:");
 	lblMob.setFont(new Font("Tahoma", Font.PLAIN, 14));
-	lblMob.setBounds(26, 236, 46, 14);
+	lblMob.setBounds(10, 290, 46, 14);
 	frame.getContentPane().add(lblMob);
 	
 	JLabel lblMail = new JLabel("E-mail");
 	lblMail.setFont(new Font("Tahoma", Font.PLAIN, 14));
-	lblMail.setBounds(26, 261, 46, 14);
+	lblMail.setBounds(10, 315, 46, 14);
 	frame.getContentPane().add(lblMail);
 	
 	txtName = new JTextField();
-	txtName.setBounds(80, 210, 86, 20);
+	txtName.setBounds(64, 264, 86, 20);
 	frame.getContentPane().add(txtName);
 	txtName.setColumns(10);
 	
 	txtMobileNumber = new JTextField();
-	txtMobileNumber.setBounds(80, 235, 86, 20);
+	txtMobileNumber.setBounds(64, 289, 86, 20);
 	frame.getContentPane().add(txtMobileNumber);
 	txtMobileNumber.setColumns(10);
 	
 	txtEmailAdress = new JTextField();
-	txtEmailAdress.setBounds(80, 260, 86, 20);
+	txtEmailAdress.setBounds(64, 314, 86, 20);
 	frame.getContentPane().add(txtEmailAdress);
 	txtEmailAdress.setColumns(10);
 	
-	JButton btnSubmit = new JButton("Submit");
-	btnSubmit.setBounds(58, 293, 89, 23);
+	btnSubmit = new JButton("Submit");
+	btnSubmit.setBounds(42, 347, 89, 23);
 	frame.getContentPane().add(btnSubmit);
 	
-	JButton btnCancel = new JButton("Cancel");
-	btnCancel.setBounds(190, 293, 89, 23);
+	btnCancel = new JButton("Cancel");
+	btnCancel.setBounds(174, 347, 89, 23);
 	frame.getContentPane().add(btnCancel);
 	
-	JLabel lblShowdate = new JLabel("showDate");
+	lblShowdate = new JLabel("showDate");
 	lblShowdate.setFont(new Font("Tahoma", Font.PLAIN, 14));
-	lblShowdate.setBounds(174, 38, 61, 14);
+	lblShowdate.setBounds(174, 38, 105, 14);
 	frame.getContentPane().add(lblShowdate);
 	
-	JLabel lblShowbusid = new JLabel("showBusID");
+	lblShowbusid = new JLabel("showBusID");
 	lblShowbusid.setFont(new Font("Tahoma", Font.PLAIN, 14));
 	lblShowbusid.setBounds(174, 63, 98, 14);
 	frame.getContentPane().add(lblShowbusid);
 	
-	JLabel lblShowfrom = new JLabel("showFrom");
+	lblShowfrom = new JLabel("showFrom");
 	lblShowfrom.setFont(new Font("Tahoma", Font.PLAIN, 14));
-	lblShowfrom.setBounds(174, 88, 86, 14);
+	lblShowfrom.setBounds(174, 82, 86, 23);
 	frame.getContentPane().add(lblShowfrom);
 	
-	JLabel lblShowto = new JLabel("showTo");
+	lblShowto = new JLabel("showTo");
 	lblShowto.setFont(new Font("Tahoma", Font.PLAIN, 14));
-	lblShowto.setBounds(174, 113, 86, 14);
+	lblShowto.setBounds(174, 107, 86, 23);
 	frame.getContentPane().add(lblShowto);
 	
-	JLabel lblShowleavingtime = new JLabel("showLeavingTime");
+	lblShowleavingtime = new JLabel("showLeavingTime");
 	lblShowleavingtime.setFont(new Font("Tahoma", Font.PLAIN, 14));
-	lblShowleavingtime.setBounds(174, 138, 121, 14);
+	lblShowleavingtime.setBounds(174, 136, 121, 14);
 	frame.getContentPane().add(lblShowleavingtime);
 	
-	JLabel lblShowarrivaltime = new JLabel("showArrivalTime");
+	lblShowarrivaltime = new JLabel("showArrivalTime");
 	lblShowarrivaltime.setFont(new Font("Tahoma", Font.PLAIN, 14));
-	lblShowarrivaltime.setBounds(174, 163, 105, 14);
+	lblShowarrivaltime.setBounds(174, 161, 105, 14);
 	frame.getContentPane().add(lblShowarrivaltime);
+	
+	JLabel lblSeat = new JLabel("Seat:");
+	lblSeat.setFont(new Font("Tahoma", Font.PLAIN, 14));
+	lblSeat.setBounds(10, 186, 46, 14);
+	frame.getContentPane().add(lblSeat);
+	
+	lblShowseat = new JLabel("showSeat");
+	lblShowseat.setFont(new Font("Tahoma", Font.PLAIN, 14));
+	lblShowseat.setBounds(174, 183, 98, 20);
+	frame.getContentPane().add(lblShowseat);
+	
+	JLabel lblDistance = new JLabel("Distance:");
+	lblDistance.setFont(new Font("Tahoma", Font.PLAIN, 14));
+	lblDistance.setBounds(10, 211, 98, 14);
+	frame.getContentPane().add(lblDistance);
+	
+	lblShowdistance = new JLabel("showDistance");
+	lblShowdistance.setFont(new Font("Tahoma", Font.PLAIN, 14));
+	lblShowdistance.setBounds(174, 211, 61, 14);
+	frame.getContentPane().add(lblShowdistance);
+	
+	lblShowTicketNumber = new JLabel("");
+	lblShowTicketNumber.setFont(new Font("Tahoma", Font.BOLD, 16));
+	lblShowTicketNumber.setBounds(10, 370, 326, 30);
+	frame.getContentPane().add(lblShowTicketNumber);
+    }
+
+    public JLabel getLblShowTicketNumber() {
+        return lblShowTicketNumber;
+    }
+
+    public JTextField getTxtName() {
+        return txtName;
+    }
+
+    public JTextField getTxtMobileNumber() {
+        return txtMobileNumber;
+    }
+
+    public JTextField getTxtEmailAdress() {
+        return txtEmailAdress;
+    }
+
+    public JButton getBtnSubmit() {
+        return btnSubmit;
+    }
+
+    public JButton getBtnCancel() {
+        return btnCancel;
+    }
+
+    public JLabel getLblShowdate() {
+        return lblShowdate;
+    }
+
+    public JLabel getLblShowbusid() {
+        return lblShowbusid;
+    }
+
+    public JLabel getLblShowfrom() {
+        return lblShowfrom;
+    }
+
+    public JLabel getLblShowto() {
+        return lblShowto;
+    }
+
+    public JLabel getLblShowleavingtime() {
+        return lblShowleavingtime;
+    }
+
+    public JLabel getLblShowarrivaltime() {
+        return lblShowarrivaltime;
+    }
+
+    public JFrame getFrame() {
+        return frame;
+    }
+    
+    public JLabel getLblShowseat() {
+        return lblShowseat;
+    }
+
+    public JLabel getLblShowdistance() {
+        return lblShowdistance;
     }
 }
