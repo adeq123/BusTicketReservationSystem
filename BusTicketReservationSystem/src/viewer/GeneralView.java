@@ -56,6 +56,7 @@ public class GeneralView {
     }; //must update addLayoutPanel() method in Reservation Tab if changes here :( as per now at least
     private JTable table;
     private JTabbedPane tabbedPane;
+    private TicketsManagementTab ticketsPanel;
 
     
     /**
@@ -105,27 +106,8 @@ public class GeneralView {
 	tabbedPane.addTab("Bus Management", null, busManagementPanel, null);
 	busManagementPanel.setLayout(null);
 	
-	JPanel TicketsPanel = new JPanel();
-	tabbedPane.addTab("Tickets Management", null, TicketsPanel, null);
-	TicketsPanel.setLayout(null);
-	
-	JScrollPane scrollPane = new JScrollPane();
-	scrollPane.setBounds(59, 48, 228, 163);
-	TicketsPanel.add(scrollPane);
-	
-	table = new JTable();
-	table.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
-	table.setModel(new DefaultTableModel(
-		new Object[][] {
-			{null, null},
-			{null, null},
-			{null, null},
-		},
-		new String[] {
-			"New column", "New column"
-		}
-	));
-	scrollPane.setViewportView(table);
+	ticketsPanel = new TicketsManagementTab();
+	tabbedPane.addTab("Tickets Management", null, ticketsPanel, null);
 	
 	JPanel FareCalculatorPanel = new JPanel();
 	tabbedPane.addTab("Fare Calculoator", null, FareCalculatorPanel, null);
@@ -155,5 +137,9 @@ public class GeneralView {
 
     public JTabbedPane getTabbedPane() {
         return tabbedPane;
+    }
+
+    public TicketsManagementTab getTicketsPanel() {
+        return ticketsPanel;
     }
 }

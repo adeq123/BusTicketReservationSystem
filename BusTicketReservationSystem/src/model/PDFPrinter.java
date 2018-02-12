@@ -35,7 +35,7 @@ public class PDFPrinter {
 	doc.open();
 	Image iTextImage = Image.getInstance(writer, awtImage, 1);
 	iTextImage.setAlignment(0);
-	iTextImage.scaleToFit(PageSize.A4.getWidth(), PageSize.A4.getHeight());
+	//iTextImage.scaleToFit(PageSize.A4.getWidth(), PageSize.A4.getHeight());
 	doc.add(iTextImage);
 	doc.close();
 

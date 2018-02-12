@@ -25,7 +25,6 @@ public class DataBaseModel {
 	    String password = "";
 	    Class.forName(driver);
 	    Connection conn = DriverManager.getConnection(url, user, password);
-	    System.out.println("Connected");
 	    return conn;
 	}catch(SQLException e){
 	    System.out.println("SQLException: " + e.getMessage());
@@ -292,5 +291,74 @@ public class DataBaseModel {
 	create.setString(1, seatsOccupied);
 	create.setInt(2, busId);
 	create.executeUpdate();
+    }
+    /**
+     * The method returns the result set of entire table
+     * @return, ResultSet, result set of entire table
+     * @throws Exception
+     */
+    public ResultSet getTicketTable() throws Exception{
+	Connection conn = getConnectionToBusDataBase(); //MAKE A FIELD ??
+	PreparedStatement create = conn.prepareStatement("SELECT * FROM tickettable");
+	ResultSet rs = create.executeQuery();
+	return rs;
+    }
+    
+    /**
+     * Updates the bus with a given Ticket Number
+     * @param ticketNumber, long, number of ticket to be updated
+     * @param passengerName, String, new name of the passenger
+     * @param email, String, new email adress of the passenger
+     * @param mobile, String, new mobile number of the passenger
+     * @throws Exception
+     */
+    public void updateTicketRecord(long ticketNumber, String passengerName, String mobile, String email) throws Exception{
+	Connection conn = getConnectionToBusDataBase(); //MAKE A FIELD ??
+	PreparedStatement create = conn.prepareStatement("UPDATE ticketTable SET "
+		+ "passengerName = ?,"
+		+ "mobile = ?,"
+		+ "email = ? "
+		+ "WHERE ticketNumber = ?");
+	create.setString(1, passengerName);
+	create.setString(2, mobile);
+	create.setString(3, email);
+	create.setString(4, Long.toString(ticketNumber));
+	create.executeUpdate();
+    }
+    
+    /**
+     * Deletes ticket from database with the given number
+     * @param ticketNumber, long, number of ticket to be deleted
+     * @throws Exception
+     */
+
+    public void deleteTicketWithNumber(String ticketNumber) throws Exception{
+	Connection conn = getConnectionToBusDataBase(); //MAKE A FIELD ??
+	PreparedStatement create = conn.prepareStatement("DELETE FROM tickettable WHERE ticketNumber=" + ticketNumber);
+	create.executeUpdate();
+    }
+    
+    /**
+     * Deletes all ticket from database for a given busId
+     * @param busId, String, busId of the bus to be deleted
+     * @throws Exception
+     */
+
+    public void deleteTicketAssociatedWithBus(String busId) throws Exception{
+	Connection conn = getConnectionToBusDataBase(); //MAKE A FIELD ??
+	PreparedStatement create = conn.prepareStatement("DELETE FROM tickettable WHERE busId=" + busId);
+	create.executeUpdate();
+    }
+    
+    /**
+     * Returns the ticket with a given ticket number (ticket number parameter is unique in the data base)
+     * @return, ResultSet, record of ticket with a specific ticket number
+     * @throws Exception
+     */
+    public ResultSet getTicketWithNo(String ticketNumber) throws Exception{
+	Connection conn = getConnectionToBusDataBase(); //MAKE A FIELD ??
+	PreparedStatement create = conn.prepareStatement("SELECT * FROM tickettable WHERE ticketNumber=" + ticketNumber);
+	ResultSet rs = create.executeQuery();
+	return rs;
     }
 }

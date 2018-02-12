@@ -13,6 +13,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -54,6 +55,7 @@ public class Controller {
 	seatNumberSelected = null;
 	initializeListeners();
 	getAndShowBusTimeTable();
+	getAndShowTicketTable();
 	theView.getBusManagementPanel().getTfBusID().setText(suggestBusID().toString());
 	fillFromComboBox();
 	fillToComboBox();
@@ -80,8 +82,12 @@ public class Controller {
 	theView.getReservationPanel().getBtnLoadBuss().addActionListener(new BtnLoadListener());
 	theView.getReservationPanel().getBtnMakeReservation().addActionListener(new BtnMakeReservationListener());
 
-	/*Passenger details*/
-
+	/*Tickets management TAB*/
+	theView.getTicketsPanel().getBtnRefreshTable().addActionListener(new RefreshTicketTableListener());
+	theView.getTicketsPanel().getBtnFetch().addActionListener(new FetchTicketListener());
+	theView.getTicketsPanel().getBtnUpdate().addActionListener(new UpdateTicketListener());
+	theView.getTicketsPanel().getBtnDelete().addActionListener(new DeleteTicketListener());
+	theView.getTicketsPanel().getBtnPrintSave().addActionListener(new PrintSaveTicketListener());
     }
 
     private void addListenerToTheSeatButtons() {
@@ -101,6 +107,22 @@ public class Controller {
 	    rs = dbModel.getBusTimeTable();
 	    busTimeTable.setModel(DbUtils.resultSetToTableModel(rs));
 	    busTimeTable.changeSelection(0, 0, false, false); //default selection on first record
+	} catch (Exception e) {
+	    JOptionPane.showMessageDialog(theView.getFrame(),"Problem with the Data Base check connection");
+	    System.out.println(e.getMessage());
+	}
+    }
+
+    /**
+     * The method takes all of the records in corresponding bus time table database and displays it in Ticket Management Tab
+     */
+    public void getAndShowTicketTable(){
+	JTable ticketTable = theView.getTicketsPanel().getTicketTable();
+	ResultSet rs;
+	try {
+	    rs = dbModel.getTicketTable();
+	    ticketTable.setModel(DbUtils.resultSetToTableModel(rs));
+	    ticketTable.changeSelection(0, 0, false, false); //default selection on first record
 	} catch (Exception e) {
 	    JOptionPane.showMessageDialog(theView.getFrame(),"Problem with the Data Base check connection");
 	    System.out.println(e.getMessage());
@@ -173,12 +195,17 @@ public class Controller {
     }
 
     public class DeleteBusListener implements ActionListener{
-	@Override
+
 	public void actionPerformed(ActionEvent arg0) {
 	    try {
-		dbModel.deleteBusWithID(Integer.parseInt(theView.getBusManagementPanel().getTfBusID().getText()));
+		String busId = theView.getBusManagementPanel().getTfBusID().getText();
+		dbModel.deleteTicketAssociatedWithBus(busId);
+		System.out.println(busId);
+		dbModel.deleteBusWithID(Integer.parseInt(busId));
 		getAndShowBusTimeTable();
 		cleanBusMangementFields();
+
+
 	    } catch (NumberFormatException e) {
 		JOptionPane.showMessageDialog(theView.getFrame(),"Number Format Exception! use the correct input");
 		e.printStackTrace();
@@ -241,6 +268,79 @@ public class Controller {
 	}
     }
 
+    public class FetchTicketListener implements ActionListener{
+
+	public void actionPerformed(ActionEvent e) {
+	    JTable ticketTable = theView.getTicketsPanel().getTicketTable();
+	    int row =  ticketTable.getSelectedRow();
+	    if(row >= 0){
+		theView.getTicketsPanel().getTfTicketNumber().setText(Long.toString((Long) ticketTable.getValueAt(row, 0))); //Ticket number
+		theView.getTicketsPanel().getTfPassengerName().setText((String) ticketTable.getValueAt(row, 9)); //bus Name
+		theView.getTicketsPanel().getTfMobile().setText((String) ticketTable.getValueAt(row, 10)); // Mobile
+		theView.getTicketsPanel().getTfEmail().setText((String) ticketTable.getValueAt(row, 11)); // Email
+	    }else{
+		JOptionPane.showMessageDialog(theView.getFrame(),"Not possible to fetch the bus. Refresh and try again");
+
+	    }
+
+	}
+
+    }
+
+    public class UpdateTicketListener implements ActionListener{
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+	    try{
+		long ticketNumber = Long.parseLong(theView.getTicketsPanel().getTfTicketNumber().getText());
+		if(ticketNumber > 0){
+		    String passengerName = theView.getTicketsPanel().getTfPassengerName().getText();
+		    String mobile = (String) theView.getTicketsPanel().getTfMobile().getText();
+		    String email = (String) theView.getTicketsPanel().getTfEmail().getText();
+		    try {
+			dbModel.updateTicketRecord(ticketNumber, passengerName, mobile, email);
+			getAndShowTicketTable();
+			cleanTicketManagementFields();
+		    } catch (Exception e) {
+			System.out.println(e.getMessage());
+			JOptionPane.showMessageDialog(theView.getFrame(),"Problem with the Data Base check connection");
+		    }
+		}else{
+		    JOptionPane.showMessageDialog(theView.getFrame(),"You must enter valid ticket number");
+		}
+	    }catch(NumberFormatException e1){
+		JOptionPane.showMessageDialog(theView.getFrame(),"You must enter valid ticket number");
+	    }
+	}
+    }
+
+    public class DeleteTicketListener implements ActionListener{
+
+	public void actionPerformed(ActionEvent ae) {
+	    try {
+		if(!theView.getTicketsPanel().getTfTicketNumber().getText().equals("")){
+		    ResultSet rs = dbModel.getTicketTable();
+		    if(rs.next()){
+			int busId = Integer.parseInt(rs.getString("busId"));
+			String seat = rs.getString("seat");
+			makeSeatVaccant(busId, seat);
+			dbModel.deleteTicketWithNumber(theView.getTicketsPanel().getTfTicketNumber().getText());
+			getAndShowTicketTable();
+			cleanTicketManagementFields();
+		    }
+
+		}else{
+		    JOptionPane.showMessageDialog(theView.getFrame(),"Insert correct ticket number");
+		}
+	    } catch (NumberFormatException e) {
+		JOptionPane.showMessageDialog(theView.getFrame(),"Number Format Exception! use the correct input");
+		e.printStackTrace();
+	    } catch (Exception e) {
+		JOptionPane.showMessageDialog(theView.getFrame(),"Problem with the Data Base check connection");
+		e.printStackTrace();
+
+	    }
+	}
+    }
     /*
      * Reservation Panel Listeners
      * @author ADRO
@@ -262,6 +362,8 @@ public class Controller {
 	    if(theView.getTabbedPane().getSelectedIndex() == theView.getTabbedPane().indexOfTab("Reservation")){ //if reservation panel is selected
 		fillFromComboBox();
 		fillToComboBox();
+	    }else if(theView.getTabbedPane().getSelectedIndex() == theView.getTabbedPane().indexOfTab("Tickets Management")){
+		getAndShowTicketTable();
 	    }
 
 	}
@@ -348,6 +450,30 @@ public class Controller {
 	}
     }
 
+    /**
+     * Deletes a seat from a list of occupied seats for a bus with a given id
+     * @param busId, int, bus to be affected
+     * @param seat, String, seat number to be deleted
+     */
+    public void makeSeatVaccant(int busId, String seat){
+	try {
+	    ResultSet theBus = dbModel.getBusWithID(Integer.toString(busId));
+	    if(theBus.next()){
+		String newSeatsOccupied = "";
+		String seatsOccupied = theBus.getString("seatsOccupied");
+		for(String s : seatsOccupied.split(";")){
+		    if(!s.equals(seat)){
+			newSeatsOccupied += s;
+		    }
+		}
+		dbModel.updateBusSeats(busId, newSeatsOccupied);
+	    }
+	} catch (Exception e) {
+	    JOptionPane.showMessageDialog(theView.getFrame(),"Problem with the Data Base check connection");
+	    e.printStackTrace();
+	}
+    }
+
     public void fillInTicketInfoOnPassengerScreen() {
 	String date = theView.getReservationPanel().getDDField().getText()
 		+ "/" + theView.getReservationPanel().getMMField().getText()
@@ -380,6 +506,22 @@ public class Controller {
 	}
     }
 
+    /**
+     * sets all of the fields in the Ticket Mangement tab to default value
+     */
+    public void  cleanTicketManagementFields(){
+	JTable ticketTable = theView.getTicketsPanel().getTicketTable();
+	if(ticketTable.getRowCount() > 0){ 
+	    theView.getTicketsPanel().getTfTicketNumber().setText(Long.toString((Long) ticketTable.getValueAt(0, 0))); //Ticket number
+	}else{
+	    theView.getTicketsPanel().getTfTicketNumber().setText("0"); //Ticket number
+	}
+	theView.getTicketsPanel().getTfTicketNumber().setText("");
+	theView.getTicketsPanel().getTfPassengerName().setText("");
+	theView.getTicketsPanel().getTfMobile().setText("");
+	theView.getTicketsPanel().getTfEmail().setText("");
+
+    }
     /*Split this method ??*/
     public class BtnPassengerPanelSubmitListener implements ActionListener {
 
@@ -419,23 +561,11 @@ public class Controller {
 			    fileName = theView.getPrinter().getSelectedFile().getAbsolutePath();
 			    try {
 				Image ticketImage = model.PDFPrinter.getImageFromPanel(passenger.getFrame());
-				model.PDFPrinter.printCwToPdf(ticketImage, fileName, ticketNumber + ".pdf");
+				model.PDFPrinter.printCwToPdf(ticketImage, fileName + ".pdf", ticketNumber);
 
 				//email ticket
-
-				String textTicket = "Your purchase comfirmation: \n"+
-					"Ticket number: " + ticketNumber + "\n"+
-					"From: " + source + "\n"+
-					"To: " + destination + "\n"+
-					"Date: " + date + "\n"+
-					"Leaving " + timing + "\n"+
-					"Distance: " + distance + "\n"+
-					"Price: " + cost + "\n"+
-					"Bus ID " + busId + "\n"+
-					"Seat number: " + seat + "\n"+
-					"Passenger name: " + passengerName + "\n"+
-					"Mob.: " + mobile + "\n"
-					;
+				String textTicket = builtTxtTicket(ticketNumber, source, destination, date, timing,
+					distance, cost, busId, seat,passengerName, mobile);
 				LinkedList <String> to = new LinkedList<String>();
 				to.add(email);
 				EmailMessage wiadomosc = new EmailMessage.EmailBuilder("marek.czwartek@wp.pl", to)
@@ -478,7 +608,6 @@ public class Controller {
     }
     public class BtnPassengerPanelCancelListener implements ActionListener {
 
-	@Override
 	public void actionPerformed(ActionEvent e) {
 	    theView.getReservationPanel().busDetailsEnabled(true);
 	    passenger.getFrame().dispatchEvent(new WindowEvent(passenger.getFrame(), WindowEvent.WINDOW_CLOSING));
@@ -487,6 +616,137 @@ public class Controller {
     }
 
 
+    public class PrintSaveTicketListener implements ActionListener {
+
+	public void actionPerformed(ActionEvent e) {
+	    System.out.println("tu");
+	    try {
+		String ticketNumber = theView.getTicketsPanel().getTfTicketNumber().getText();
+		if(!ticketNumber.equals("")){
+		    ResultSet theTicket = dbModel.getTicketWithNo(ticketNumber);
+		    if(theTicket.next()){
+			System.out.println("tam");
+			String source = theTicket.getString("source");
+			String destination =theTicket.getString("destination");
+			String date = theTicket.getString("date");
+			String timing = theTicket.getString("timing");
+			String distance = theTicket.getString("distance");
+			String cost = theTicket.getString("cost");
+			String busId = theTicket.getString("busId");
+			String seat = theTicket.getString("seat");
+			String passengerName = theTicket.getString("passengerName");
+			String email = theTicket.getString("email");
+			String mobile = theTicket.getString("mobile");
+
+			PassengerWindow tmpPassenger = new PassengerWindow();
+
+
+			tmpPassenger.getLblShowfrom().setText(source);
+			tmpPassenger.getLblShowto().setText(destination);
+			tmpPassenger.getLblShowdate().setText(date);
+			tmpPassenger.getLblShowleavingtime().setText(timing);
+			tmpPassenger.getLblShowdistance().setText(distance);
+			// tmpPassenger.ge.setText(distance);   
+			tmpPassenger.getLblShowbusid().setText(busId);
+			tmpPassenger.getLblShowseat().setText(seat);
+			tmpPassenger.getTxtName().setText(passengerName);
+			tmpPassenger.getTxtEmailAdress().setText(email);
+			tmpPassenger.getTxtMobileNumber().setText(mobile);
+			tmpPassenger.getTxtName().setEditable(false);
+			tmpPassenger.getTxtEmailAdress().setEditable(false);
+			tmpPassenger.getTxtMobileNumber().setEditable(false);
+			
+			// print pdf
+			tmpPassenger.newScreen(null, null, tmpPassenger);
+			String fileName = null;
+			int returnVal = theView.getPrinter().showSaveDialog(null);
+			if(returnVal == JFileChooser.APPROVE_OPTION) {
+			    fileName = theView.getPrinter().getSelectedFile().getAbsolutePath();
+			    
+			    try {
+				Image ticketImage = model.PDFPrinter.getImageFromPanel(tmpPassenger.getFrame());
+				model.PDFPrinter.printCwToPdf(ticketImage, fileName + ".pdf", ticketNumber);
+				
+				//email ticket
+				String textTicket = builtTxtTicket(ticketNumber, source, destination, date, timing,
+					distance, cost, busId, seat,passengerName, mobile);
+				LinkedList <String> to = new LinkedList<String>();
+				to.add(email);
+				EmailMessage wiadomosc = new EmailMessage.EmailBuilder("marek.czwartek@wp.pl", to)
+					.addSubject("Ticket purchase confirmation " + ticketNumber)
+					.addContent(textTicket)
+					.build();
+
+				wiadomosc.send("adrianroguski1990", "smtp.wp.pl", 465);
+
+			    } catch (DocumentException  e1) {
+				JOptionPane.showMessageDialog(theView.getFrame(), "Problem with the file you want write to. Please check the file!");
+				e1.printStackTrace();
+			    }catch (IOException   e2) {
+				JOptionPane.showMessageDialog(theView.getFrame(), "Problem with image you want to print out!");
+				e2.printStackTrace();
+			    }catch(javax.mail.internet.AddressException me){
+				JOptionPane.showMessageDialog(theView.getFrame(), "Email adress incorrect!");
+				me.printStackTrace();
+			    }
+			}
+			tmpPassenger.getFrame().dispatchEvent(new WindowEvent(passenger.getFrame(), WindowEvent.WINDOW_CLOSING));
+			cleanTicketManagementFields();
+		    }
+		    
+		}else{
+		    JOptionPane.showMessageDialog(theView.getFrame(), "Ticket number incorrect!");
+		}
+
+	    } catch (Exception e1) {
+		JOptionPane.showMessageDialog(passenger.getFrame(),"Problem with the Data Base check connection");
+		e1.printStackTrace();
+	    }
+	}
+
+    }
+    public class RefreshTicketTableListener implements ActionListener{
+
+	public void actionPerformed(ActionEvent arg0) {
+	    getAndShowTicketTable();
+
+	}
+
+    }
+    /**
+     * Builds a txt version of the ticket to be sent  to the client as a confirmation
+     * @param ticketNumber
+     * @param source
+     * @param destination
+     * @param date
+     * @param timing
+     * @param distance
+     * @param cost
+     * @param busId
+     * @param seat
+     * @param passengerName
+     * @param mobile
+     * @return
+     */
+    public String builtTxtTicket(String ticketNumber, String source,
+		String destination, String date, String timing, String distance,
+		String cost, String busId, String seat, String passengerName,
+		String mobile) {
+	    String textTicket = "Your purchase comfirmation: \n"+
+	    	"Ticket number: " + ticketNumber + "\n"+
+	    	"From: " + source + "\n"+
+	    	"To: " + destination + "\n"+
+	    	"Date: " + date + "\n"+
+	    	"Leaving " + timing + "\n"+
+	    	"Distance: " + distance + "\n"+
+	    	"Price: " + cost + "\n"+
+	    	"Bus ID " + busId + "\n"+
+	    	"Seat number: " + seat + "\n"+
+	    	"Passenger name: " + passengerName + "\n"+
+	    	"Mob.: " + mobile + "\n"
+	    	;
+	    return textTicket;
+	}
     /**
      * The method updates the bus layout view according to seats occupied list in data base
      * @param id
@@ -567,6 +827,7 @@ public class Controller {
      * Fills from ComboBox with all possible source towns
      */
     public void fillFromComboBox(){
+	HashSet <String> fromList = new HashSet <String> ();
 	if(theView.getReservationPanel().getFromDropDown().getItemCount() > 0){
 	    theView.getReservationPanel().getFromDropDown().removeAllItems();
 	}
@@ -576,9 +837,12 @@ public class Controller {
 	    String name = "";
 	    while(rs.next()){
 		name = rs.getString("source");
-		theView.getReservationPanel().getFromDropDown().addItem(name);
+		if(!fromList.contains(name)){
+		    fromList.add(name);
+		    theView.getReservationPanel().getFromDropDown().addItem(name);
+		}
 	    }
-	    
+
 	} catch (Exception e) {
 	    JOptionPane.showMessageDialog(theView.getFrame(),"Problem with the Data Base check connection");
 	    e.printStackTrace();
@@ -589,8 +853,6 @@ public class Controller {
     /**
      * Fills To ComboBox with all possible destinations
      */
-
-
     public void fillToComboBox() {
 	if(theView.getReservationPanel().getFromDropDown().getItemCount() > 0){
 	    theView.getReservationPanel().getToDropDown().removeAllItems();
@@ -680,4 +942,5 @@ public class Controller {
 	}
 
     }
+
 }
