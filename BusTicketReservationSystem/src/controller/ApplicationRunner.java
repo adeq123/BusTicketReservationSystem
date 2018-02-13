@@ -3,6 +3,7 @@ package controller;
 import java.awt.EventQueue;
 
 import viewer.GeneralView;
+import viewer.Login;
 
 /**
  * Runner object for the MVC bus management application

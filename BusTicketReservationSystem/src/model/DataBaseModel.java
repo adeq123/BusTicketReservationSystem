@@ -17,7 +17,7 @@ public class DataBaseModel {
      * @return, Connection, object used to communicate with bus management data base
      * @throws Exception
      */
-    private Connection getConnectionToBusDataBase() throws Exception{
+   public Connection getConnectionToBusDataBase() throws Exception{
 	try{
 	    String driver = "com.mysql.jdbc.Driver";
 	    String url = "jdbc:mysql://localhost:3306/busticketreservationsystem";

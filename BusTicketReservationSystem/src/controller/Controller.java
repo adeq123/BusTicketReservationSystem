@@ -17,6 +17,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
@@ -26,10 +27,13 @@ import javax.swing.event.ChangeListener;
 
 import com.itextpdf.text.DocumentException;
 
+import model.BusTicketCalculations;
 import model.DataBaseModel;
 import model.EmailMessage;
+import model.LoginDB;
 import net.proteanit.sql.DbUtils;
 import viewer.GeneralView;
+import viewer.Login;
 import viewer.PassengerWindow;
 /**
  * This class models and Controller part of the application designed in MVC concept. 
@@ -45,21 +49,56 @@ public class Controller {
     private DataBaseModel dbModel;
     private PassengerWindow passenger;
     private String seatNumberSelected;
-
+    private LoginDB logDB;
+    private Login loginView;
+    private final String ADMINISTRATION_PASSWORD = "admin";
+    /**
+     * Starts the application with login system
+     */
     public void start(){
 	theView = new GeneralView (this);
 	dbModel = new DataBaseModel();
-	theView.getFrame().setVisible(true);
+	loginView = new Login();
+	loginView.setVisible(true);
+	try {
+	    logDB = new LoginDB(dbModel);
+	} catch (Exception e) {
+	    e.printStackTrace();
+	} 
 
+	loginView.getBtnSubmit().addActionListener(new ActionListener(){
+	    public void actionPerformed(ActionEvent arg0) {
+		String pwd = new String(loginView.getPfPassword().getPassword());
+		String login = loginView.getTfLogin().getText();
+
+		if(!login.equals("") && !pwd.equals("") && verifyUser(login, pwd)){
+		    JOptionPane.showMessageDialog(theView.getFrame(),"Password correct");
+		    startBusApplication();
+		    loginView.setVisible(false);
+		}else{
+		    JOptionPane.showMessageDialog(theView.getFrame(),"Incorrect login or password");
+		}
+
+	    }  
+	});
+
+    }
+
+    /**
+     * Starts the main window / application
+     */
+    public void startBusApplication() {
+	theView.getFrame().setVisible(true);
 	passenger = new PassengerWindow();
 	seatNumberSelected = null;
 	initializeListeners();
 	getAndShowBusTimeTable();
 	getAndShowTicketTable();
 	theView.getBusManagementPanel().getTfBusID().setText(suggestBusID().toString());
-	fillFromComboBox();
-	fillToComboBox();
-
+	fillFromComboBox(theView.getReservationPanel().getFromDropDown());
+	fillToComboBox(theView.getReservationPanel().getToDropDown(), theView.getReservationPanel().getFromDropDown());
+	fillFromComboBox(theView.getFareCalculatorPanel().getCBFrom());
+	fillToComboBox(theView.getFareCalculatorPanel().getCBTo(), theView.getFareCalculatorPanel().getCBFrom());
     }
     /**
      * The method initialize the listeners for the application
@@ -88,6 +127,13 @@ public class Controller {
 	theView.getTicketsPanel().getBtnUpdate().addActionListener(new UpdateTicketListener());
 	theView.getTicketsPanel().getBtnDelete().addActionListener(new DeleteTicketListener());
 	theView.getTicketsPanel().getBtnPrintSave().addActionListener(new PrintSaveTicketListener());
+
+	/*Fare calculator tab*/
+	theView.getFareCalculatorPanel().getCBFrom().addActionListener(new FromFareCBSelectedListener());
+	theView.getFareCalculatorPanel().getBtnCalculateFare().addActionListener(new CalculateFareListener());
+
+	/*Administration tab*/
+	theView.getAdminPanel().getBtnSubmit().addActionListener(new submitAdminPwdListener());
     }
 
     private void addListenerToTheSeatButtons() {
@@ -97,6 +143,8 @@ public class Controller {
 	}
 
     }
+    
+    /* MAKE ONE METHOD OUT OF THOSE THRE :)))))*/
     /**
      * The method takes all of the records in corresponding bus time table database and displays it in BusManagementTab
      */
@@ -123,6 +171,22 @@ public class Controller {
 	    rs = dbModel.getTicketTable();
 	    ticketTable.setModel(DbUtils.resultSetToTableModel(rs));
 	    ticketTable.changeSelection(0, 0, false, false); //default selection on first record
+	} catch (Exception e) {
+	    JOptionPane.showMessageDialog(theView.getFrame(),"Problem with the Data Base check connection");
+	    System.out.println(e.getMessage());
+	}
+    }
+    
+    /**
+     * The method takes all of the records in corresponding administration table database and displays it in administration tab
+     */
+    public void getAndShowAdminTable(){
+	JTable adminTable = theView.getAdminPanel().getTable();
+	ResultSet rs;
+	try {
+	    rs = dbModel.getTicketTable();
+	    adminTable.setModel(DbUtils.resultSetToTableModel(rs));
+	    adminTable.changeSelection(0, 0, false, false); //default selection on first record
 	} catch (Exception e) {
 	    JOptionPane.showMessageDialog(theView.getFrame(),"Problem with the Data Base check connection");
 	    System.out.println(e.getMessage());
@@ -350,18 +414,28 @@ public class Controller {
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-	    fillToComboBox() ;
+	    fillToComboBox(theView.getReservationPanel().getToDropDown(), theView.getReservationPanel().getFromDropDown());
 	}
 
     }
+
+    public class FromFareCBSelectedListener implements ActionListener{
+
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+	    fillToComboBox(theView.getFareCalculatorPanel().getCBTo(), theView.getFareCalculatorPanel().getCBFrom());
+	}
+
+    }
+
 
     public class TabbedPaneChangeListener implements ChangeListener {
 
 	@Override
 	public void stateChanged(ChangeEvent arg0) {
 	    if(theView.getTabbedPane().getSelectedIndex() == theView.getTabbedPane().indexOfTab("Reservation")){ //if reservation panel is selected
-		fillFromComboBox();
-		fillToComboBox();
+		fillFromComboBox(theView.getReservationPanel().getFromDropDown());
+		fillToComboBox(theView.getReservationPanel().getToDropDown(), theView.getReservationPanel().getFromDropDown());
 	    }else if(theView.getTabbedPane().getSelectedIndex() == theView.getTabbedPane().indexOfTab("Tickets Management")){
 		getAndShowTicketTable();
 	    }
@@ -424,6 +498,21 @@ public class Controller {
 	    String id = theView.getReservationPanel().getBusListDropDown().getSelectedItem().toString().split(" ")[0];
 	    updateBusLayoutAccordingToDatabase(id);
 	    addListenerToTheSeatButtons();
+	}
+
+    }
+
+    public class submitAdminPwdListener implements ActionListener{
+
+	public void actionPerformed(ActionEvent arg0) {
+	    String pwd = new String(theView.getAdminPanel().getPasswordField().getPassword());
+	    if(ADMINISTRATION_PASSWORD.equals(pwd)){
+		theView.getAdminPanel().showAdminTools(true);
+		getAndShowAdminTable();
+	    }else{
+		JOptionPane.showMessageDialog(theView.getFrame(),"Password incorrect ! Try again");
+	    }
+
 	}
 
     }
@@ -655,18 +744,18 @@ public class Controller {
 			tmpPassenger.getTxtName().setEditable(false);
 			tmpPassenger.getTxtEmailAdress().setEditable(false);
 			tmpPassenger.getTxtMobileNumber().setEditable(false);
-			
+
 			// print pdf
 			tmpPassenger.newScreen(null, null, tmpPassenger);
 			String fileName = null;
 			int returnVal = theView.getPrinter().showSaveDialog(null);
 			if(returnVal == JFileChooser.APPROVE_OPTION) {
 			    fileName = theView.getPrinter().getSelectedFile().getAbsolutePath();
-			    
+
 			    try {
 				Image ticketImage = model.PDFPrinter.getImageFromPanel(tmpPassenger.getFrame());
 				model.PDFPrinter.printCwToPdf(ticketImage, fileName + ".pdf", ticketNumber);
-				
+
 				//email ticket
 				String textTicket = builtTxtTicket(ticketNumber, source, destination, date, timing,
 					distance, cost, busId, seat,passengerName, mobile);
@@ -693,7 +782,7 @@ public class Controller {
 			tmpPassenger.getFrame().dispatchEvent(new WindowEvent(passenger.getFrame(), WindowEvent.WINDOW_CLOSING));
 			cleanTicketManagementFields();
 		    }
-		    
+
 		}else{
 		    JOptionPane.showMessageDialog(theView.getFrame(), "Ticket number incorrect!");
 		}
@@ -709,6 +798,28 @@ public class Controller {
 
 	public void actionPerformed(ActionEvent arg0) {
 	    getAndShowTicketTable();
+
+	}
+
+    }
+
+    public class CalculateFareListener implements ActionListener{
+
+	public void actionPerformed(ActionEvent arg0) {
+	    String from = theView.getFareCalculatorPanel().getCBFrom().getSelectedItem().toString();
+	    String to = theView.getFareCalculatorPanel().getCBTo().getSelectedItem().toString();
+	    try {
+		ResultSet theBus = dbModel.getBusDetials(from, to);
+		if(theBus.next()){
+		    float distance = Float.parseFloat(theBus.getString("Distance"));
+		    theView.getFareCalculatorPanel().getLblShowfare().setText(Double.toString(BusTicketCalculations.getTicketPrice(distance)) + " z³.");
+		}else{
+		    JOptionPane.showMessageDialog(passenger.getFrame(),"No bus found");
+		}
+	    } catch (Exception e) {
+		JOptionPane.showMessageDialog(passenger.getFrame(),"Problem with the Data Base check connection");
+		e.printStackTrace();
+	    }
 
 	}
 
@@ -729,24 +840,24 @@ public class Controller {
      * @return
      */
     public String builtTxtTicket(String ticketNumber, String source,
-		String destination, String date, String timing, String distance,
-		String cost, String busId, String seat, String passengerName,
-		String mobile) {
-	    String textTicket = "Your purchase comfirmation: \n"+
-	    	"Ticket number: " + ticketNumber + "\n"+
-	    	"From: " + source + "\n"+
-	    	"To: " + destination + "\n"+
-	    	"Date: " + date + "\n"+
-	    	"Leaving " + timing + "\n"+
-	    	"Distance: " + distance + "\n"+
-	    	"Price: " + cost + "\n"+
-	    	"Bus ID " + busId + "\n"+
-	    	"Seat number: " + seat + "\n"+
-	    	"Passenger name: " + passengerName + "\n"+
-	    	"Mob.: " + mobile + "\n"
-	    	;
-	    return textTicket;
-	}
+	    String destination, String date, String timing, String distance,
+	    String cost, String busId, String seat, String passengerName,
+	    String mobile) {
+	String textTicket = "Your purchase comfirmation: \n"+
+		"Ticket number: " + ticketNumber + "\n"+
+		"From: " + source + "\n"+
+		"To: " + destination + "\n"+
+		"Date: " + date + "\n"+
+		"Leaving " + timing + "\n"+
+		"Distance: " + distance + "\n"+
+		"Price: " + cost + "\n"+
+		"Bus ID " + busId + "\n"+
+		"Seat number: " + seat + "\n"+
+		"Passenger name: " + passengerName + "\n"+
+		"Mob.: " + mobile + "\n"
+		;
+	return textTicket;
+    }
     /**
      * The method updates the bus layout view according to seats occupied list in data base
      * @param id
@@ -826,10 +937,10 @@ public class Controller {
     /**
      * Fills from ComboBox with all possible source towns
      */
-    public void fillFromComboBox(){
+    public void fillFromComboBox(JComboBox fromCB){
 	HashSet <String> fromList = new HashSet <String> ();
-	if(theView.getReservationPanel().getFromDropDown().getItemCount() > 0){
-	    theView.getReservationPanel().getFromDropDown().removeAllItems();
+	if(fromCB.getItemCount() > 0){
+	    fromCB.removeAllItems();
 	}
 
 	try {
@@ -839,7 +950,7 @@ public class Controller {
 		name = rs.getString("source");
 		if(!fromList.contains(name)){
 		    fromList.add(name);
-		    theView.getReservationPanel().getFromDropDown().addItem(name);
+		    fromCB.addItem(name);
 		}
 	    }
 
@@ -853,10 +964,10 @@ public class Controller {
     /**
      * Fills To ComboBox with all possible destinations
      */
-    public void fillToComboBox() {
-	if(theView.getReservationPanel().getFromDropDown().getItemCount() > 0){
-	    theView.getReservationPanel().getToDropDown().removeAllItems();
-	    if(theView.getReservationPanel().getFromDropDown().getSelectedItem() == null){
+    public void fillToComboBox(JComboBox toCB, JComboBox fromCB) {
+	if(fromCB.getItemCount() > 0){
+	    toCB.removeAllItems();
+	    if(fromCB.getSelectedItem() == null){
 		System.out.print(theView.getReservationPanel().getFromDropDown().getItemCount() + "!!!!!!!!!!");
 	    }
 	    try {
@@ -867,8 +978,8 @@ public class Controller {
 		    to = rs.getString("destination");
 		    from = rs.getString("source");
 
-		    if(theView.getReservationPanel().getFromDropDown().getSelectedItem().toString().toLowerCase().equals(from.toLowerCase())){//add only destinations available for the source
-			theView.getReservationPanel().getToDropDown().addItem(to);
+		    if(fromCB.getSelectedItem().toString().toLowerCase().equals(from.toLowerCase())){//add only destinations available for the source
+			toCB.addItem(to);
 		    }
 		}
 	    } catch (Exception e) {
@@ -942,5 +1053,27 @@ public class Controller {
 	}
 
     }
+
+    /**
+     * Checks the username / password pair against the database. If those are correct return true. False otherwise
+     * @param username
+     * @param pwd
+     * @return, boolean, true if username and password pair is correct return true. False otherwise
+     */
+    public boolean verifyUser(String username, String pwd){
+	try {
+	    ResultSet user = logDB.getUser(username);
+	    if(user.next()){
+		String password = user.getString("password");
+		if(pwd.equals(password)){
+		    return true;
+		}
+	    }
+	} catch (Exception e) {
+	    e.printStackTrace();
+	}
+	return false;
+    }
+
 
 }

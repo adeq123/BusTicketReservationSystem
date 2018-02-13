@@ -11,6 +11,7 @@ import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JTextField;
 import controller.Controller;
+import model.AdministrationTab;
 
 import javax.swing.SwingConstants;
 import javax.swing.JButton;
@@ -57,6 +58,8 @@ public class GeneralView {
     private JTable table;
     private JTabbedPane tabbedPane;
     private TicketsManagementTab ticketsPanel;
+    private FareCalculatorPanel fareCalculatorPanel;
+    private AdministrationTab adminPanel;
 
     
     /**
@@ -109,13 +112,12 @@ public class GeneralView {
 	ticketsPanel = new TicketsManagementTab();
 	tabbedPane.addTab("Tickets Management", null, ticketsPanel, null);
 	
-	JPanel FareCalculatorPanel = new JPanel();
-	tabbedPane.addTab("Fare Calculoator", null, FareCalculatorPanel, null);
-	FareCalculatorPanel.setLayout(null);
+	fareCalculatorPanel = new FareCalculatorPanel();
+	tabbedPane.addTab("Fare Calculator", null, fareCalculatorPanel, null);
 	
-	JPanel AdminPanel = new JPanel();
-	tabbedPane.addTab("Administration", null, AdminPanel, null);
-	AdminPanel.setLayout(null);
+	
+	adminPanel = new AdministrationTab();
+	tabbedPane.addTab("Administration", null, adminPanel, null);
 	printer = new JFileChooser();
     }
 
@@ -141,5 +143,12 @@ public class GeneralView {
 
     public TicketsManagementTab getTicketsPanel() {
         return ticketsPanel;
+    }
+    public FareCalculatorPanel getFareCalculatorPanel() {
+        return fareCalculatorPanel;
+    }
+
+    public AdministrationTab getAdminPanel() {
+        return adminPanel;
     }
 }
