@@ -10,4 +10,5 @@ The application allows to book a ticket from one place to desired destination. I
 ## Detailed description & features
 ### Login
 To open the application you have to be registered user or admin and enter correct login / password pair
+
 ![](BusTicketReservationSystem/BusTicketReservationSystem/readme images/login.png)
