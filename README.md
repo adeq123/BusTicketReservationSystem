@@ -40,4 +40,18 @@ After selecting the seat the user needs to click make reservation and booking de
 ![](BusTicketReservationSystem/readme%20images/reservation5.png)
 ![](BusTicketReservationSystem/readme%20images/reservation6.png)
 
+###Bus Management
+The second most important feature is possbility to add a new route. To do that the user needs to simply fill in the form and press add. Additionally you can view, delete and update the existing routs. The Fetch button is available to fill in the form with the data from existing record. You just select the record in the table and press fetch.
+![](BusTicketReservationSystem/readme%20images/BusMana.png)
 
+###Ticket Management
+Ticket management tab allows user to:
+- update the passenger info
+- delete the ticket based on ticket number
+- print ticket to pdf and send confirmation to passenger
+- view all of the sold tickets
+The Fetch button is available to fill in the form with the data from existing record. You just select the record in the table and press fetch
+![](BusTicketReservationSystem/readme%20images/ticketmana.png)
+
+###Fare calculator
+A simple tool to calcualte the ticket price between two places. Simply select the source and destiantion and press Calcualte Fare.
