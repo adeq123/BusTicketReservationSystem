@@ -62,7 +62,7 @@ A simple tool to calcualte the ticket price between two places. Simply select th
 ![](BusTicketReservationSystem/readme%20images/farecalc.png)
 
 ## Concepts used:
-Java SE, MySQL, JavaMail, Javadoc, Swing, AWT, MVC, Builder pattern, PDF generation.  
+Java SE, MySQL, JavaMail, GIT, Javadoc, Swing, AWT, MVC, Builder pattern, PDF generation.  
 Core datastructures used: Arrays, LinkedList, Hashsets.  
 File Handling - reading / writing to txt file. PDF generation. E-Mail sending with SSL protocol.
 
