@@ -40,22 +40,26 @@ public class AdministrationTab extends JPanel {
     	
     	passwordField = new JPasswordField();
     	springLayout.putConstraint(SpringLayout.NORTH, passwordField, 6, SpringLayout.SOUTH, lblEnterAdministrationPassword);
-    	springLayout.putConstraint(SpringLayout.WEST, passwordField, 0, SpringLayout.WEST, lblEnterAdministrationPassword);
+    	springLayout.putConstraint(SpringLayout.WEST, passwordField, 10, SpringLayout.WEST, this);
     	add(passwordField);
     	
     	btnSubmit = new JButton("Submit");
     	springLayout.putConstraint(SpringLayout.NORTH, btnSubmit, 6, SpringLayout.SOUTH, passwordField);
-    	springLayout.putConstraint(SpringLayout.WEST, btnSubmit, 74, SpringLayout.WEST, this);
     	add(btnSubmit);
     	
     	scrollPane = new JScrollPane();
+    	springLayout.putConstraint(SpringLayout.EAST, passwordField, -82, SpringLayout.WEST, scrollPane);
     	springLayout.putConstraint(SpringLayout.NORTH, scrollPane, 9, SpringLayout.NORTH, this);
     	springLayout.putConstraint(SpringLayout.WEST, scrollPane, 106, SpringLayout.EAST, lblEnterAdministrationPassword);
     	springLayout.putConstraint(SpringLayout.SOUTH, scrollPane, -22, SpringLayout.SOUTH, this);
     	springLayout.putConstraint(SpringLayout.EAST, scrollPane, 572, SpringLayout.WEST, this);
     	add(scrollPane);
     	
-    	table = new JTable();
+    	table = new JTable(){  
+	    public boolean isCellEditable(int row, int column){  
+		return false;  
+	    }
+	};
     	table.setModel(new DefaultTableModel(
     		new Object[][] {
     			{null, null},
@@ -78,29 +82,29 @@ public class AdministrationTab extends JPanel {
     	scrollPane.setViewportView(table);
     	
     	lblLogin = new JLabel("Login:");
+    	springLayout.putConstraint(SpringLayout.NORTH, lblLogin, 46, SpringLayout.SOUTH, passwordField);
     	springLayout.putConstraint(SpringLayout.WEST, lblLogin, 0, SpringLayout.WEST, lblEnterAdministrationPassword);
     	lblLogin.setFont(new Font("Tahoma", Font.PLAIN, 14));
     	add(lblLogin);
     	
     	lblPassword = new JLabel("Password:");
+    	springLayout.putConstraint(SpringLayout.NORTH, lblPassword, 12, SpringLayout.SOUTH, lblLogin);
     	springLayout.putConstraint(SpringLayout.WEST, lblPassword, 0, SpringLayout.WEST, lblEnterAdministrationPassword);
     	lblPassword.setFont(new Font("Tahoma", Font.PLAIN, 14));
     	add(lblPassword);
     	
     	tfLogin = new JTextField();
-    	springLayout.putConstraint(SpringLayout.EAST, passwordField, 0, SpringLayout.EAST, tfLogin);
     	springLayout.putConstraint(SpringLayout.NORTH, tfLogin, 17, SpringLayout.SOUTH, btnSubmit);
-    	springLayout.putConstraint(SpringLayout.NORTH, lblLogin, 0, SpringLayout.NORTH, tfLogin);
-    	springLayout.putConstraint(SpringLayout.WEST, tfLogin, 10, SpringLayout.WEST, btnSubmit);
+    	springLayout.putConstraint(SpringLayout.WEST, tfLogin, 36, SpringLayout.EAST, lblLogin);
+    	springLayout.putConstraint(SpringLayout.EAST, tfLogin, -82, SpringLayout.WEST, scrollPane);
+    	springLayout.putConstraint(SpringLayout.WEST, btnSubmit, 0, SpringLayout.WEST, tfLogin);
     	add(tfLogin);
     	tfLogin.setColumns(10);
     	
     	tfPass = new JTextField();
     	springLayout.putConstraint(SpringLayout.NORTH, tfPass, 6, SpringLayout.SOUTH, tfLogin);
     	springLayout.putConstraint(SpringLayout.WEST, tfPass, 11, SpringLayout.EAST, lblPassword);
-    	springLayout.putConstraint(SpringLayout.EAST, tfPass, -96, SpringLayout.WEST, scrollPane);
-    	springLayout.putConstraint(SpringLayout.EAST, tfLogin, 0, SpringLayout.EAST, tfPass);
-    	springLayout.putConstraint(SpringLayout.SOUTH, lblPassword, 0, SpringLayout.SOUTH, tfPass);
+    	springLayout.putConstraint(SpringLayout.EAST, tfPass, 0, SpringLayout.EAST, passwordField);
     	add(tfPass);
     	tfPass.setColumns(10);
     	
@@ -111,7 +115,7 @@ public class AdministrationTab extends JPanel {
     	
     	btnDelete = new JButton("Delete");
     	springLayout.putConstraint(SpringLayout.NORTH, btnDelete, 0, SpringLayout.NORTH, btnAdd);
-    	springLayout.putConstraint(SpringLayout.EAST, btnDelete, 0, SpringLayout.EAST, btnSubmit);
+    	springLayout.putConstraint(SpringLayout.WEST, btnDelete, 12, SpringLayout.EAST, btnAdd);
     	add(btnDelete);
     	
     	btnFetch = new JButton("Fetch");
@@ -135,6 +139,7 @@ public class AdministrationTab extends JPanel {
     public void showAdminTools(boolean visible){
 	btnFetch.setVisible(visible);
 	btnDelete.setVisible(visible);
+	btnRefreshTable.setVisible(visible);
 	btnAdd.setVisible(visible); 
 	tfPass.setVisible(visible);
 	tfLogin.setVisible(visible);
@@ -143,6 +148,16 @@ public class AdministrationTab extends JPanel {
 	table.setVisible(visible);
 	scrollPane.setVisible(visible);
     }
+    
+    /**
+     * Cleans all fields on the panel
+     */
+    public void cleanAllFields(){
+	tfPass.setText("");
+	tfLogin.setText("");
+	passwordField.setText("");
+    }
+    
     public JPasswordField getPasswordField() {
         return passwordField;
     }
@@ -181,5 +196,8 @@ public class AdministrationTab extends JPanel {
 
     public JButton getBtnFetch() {
         return btnFetch;
+    }
+    public JButton getBtnRefreshTable() {
+        return btnRefreshTable;
     }
 }

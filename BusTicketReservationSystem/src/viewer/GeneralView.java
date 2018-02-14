@@ -22,6 +22,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
+import java.awt.Toolkit;
 
 /**
  * This application was developed with WindowsBuilder
@@ -76,6 +77,7 @@ public class GeneralView {
     private void initialize() {
 	
 	Frame = new JFrame();
+	Frame.setIconImage(Toolkit.getDefaultToolkit().getImage(GeneralView.class.getResource("/viewer/Bus-2-icon.png")));
 	getFrame().setBounds(100, 100, 1079, 557);
 	getFrame().setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	getFrame().getContentPane().setLayout(new BoxLayout(getFrame().getContentPane(), BoxLayout.X_AXIS));

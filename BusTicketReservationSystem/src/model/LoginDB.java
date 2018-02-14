@@ -55,7 +55,7 @@ public class LoginDB {
      */
     public void deleteUser(String username) throws Exception{
 	Connection conn = dbModel.getConnectionToBusDataBase(); //MAKE A FIELD ??
-	PreparedStatement create = conn.prepareStatement("DELETE FROM logintable WHERE username=" + username);
+	PreparedStatement create = conn.prepareStatement("DELETE FROM logintable WHERE username='" + username + "'");
 	create.executeUpdate();
     }
 

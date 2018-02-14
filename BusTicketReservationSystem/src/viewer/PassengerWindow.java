@@ -11,6 +11,7 @@ import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.Toolkit;
 
 public class PassengerWindow{
 
@@ -66,6 +67,7 @@ public class PassengerWindow{
      */
     private void initialize() {
 	frame = new JFrame();
+	frame.setIconImage(Toolkit.getDefaultToolkit().getImage(PassengerWindow.class.getResource("/viewer/Bus-2-icon.png")));
 	frame.setBounds(100, 100, 362, 449);
 	frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	frame.getContentPane().setLayout(null);

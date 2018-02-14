@@ -134,6 +134,11 @@ public class Controller {
 
 	/*Administration tab*/
 	theView.getAdminPanel().getBtnSubmit().addActionListener(new submitAdminPwdListener());
+	theView.getAdminPanel().getBtnRefreshTable().addActionListener(new RefreshAdminTabListener());
+	theView.getAdminPanel().getBtnAdd().addActionListener(new AddUserListener());
+	theView.getAdminPanel().getBtnDelete().addActionListener(new DeleteUserListener());
+	theView.getAdminPanel().getBtnFetch().addActionListener(new FetchUserListener());
+
     }
 
     private void addListenerToTheSeatButtons() {
@@ -143,7 +148,7 @@ public class Controller {
 	}
 
     }
-    
+
     /* MAKE ONE METHOD OUT OF THOSE THRE :)))))*/
     /**
      * The method takes all of the records in corresponding bus time table database and displays it in BusManagementTab
@@ -176,7 +181,7 @@ public class Controller {
 	    System.out.println(e.getMessage());
 	}
     }
-    
+
     /**
      * The method takes all of the records in corresponding administration table database and displays it in administration tab
      */
@@ -184,7 +189,7 @@ public class Controller {
 	JTable adminTable = theView.getAdminPanel().getTable();
 	ResultSet rs;
 	try {
-	    rs = dbModel.getTicketTable();
+	    rs = logDB.getAdminTable();
 	    adminTable.setModel(DbUtils.resultSetToTableModel(rs));
 	    adminTable.changeSelection(0, 0, false, false); //default selection on first record
 	} catch (Exception e) {
@@ -332,6 +337,21 @@ public class Controller {
 	}
     }
 
+    public class FetchAdminDataListener implements ActionListener{
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+	    JTable adminTable = theView.getAdminPanel().getTable();
+	    int row =  adminTable.getSelectedRow();
+	    if(row >= 0){
+		theView.getAdminPanel().getTfLogin().setText((String) adminTable.getValueAt(row, 0)); //Login
+		theView.getAdminPanel().getTfPass().setText((String) adminTable.getValueAt(row, 1));  //Password
+	    }else{
+		JOptionPane.showMessageDialog(theView.getFrame(),"Not possible to fetch the bus. Refresh and try again");
+
+	    }
+	}
+    }
+
     public class FetchTicketListener implements ActionListener{
 
 	public void actionPerformed(ActionEvent e) {
@@ -438,6 +458,8 @@ public class Controller {
 		fillToComboBox(theView.getReservationPanel().getToDropDown(), theView.getReservationPanel().getFromDropDown());
 	    }else if(theView.getTabbedPane().getSelectedIndex() == theView.getTabbedPane().indexOfTab("Tickets Management")){
 		getAndShowTicketTable();
+	    }else if(theView.getTabbedPane().getSelectedIndex() == theView.getTabbedPane().indexOfTab("Administration")){
+		theView.getAdminPanel().showAdminTools(false);
 	    }
 
 	}
@@ -509,6 +531,7 @@ public class Controller {
 	    if(ADMINISTRATION_PASSWORD.equals(pwd)){
 		theView.getAdminPanel().showAdminTools(true);
 		getAndShowAdminTable();
+		theView.getAdminPanel().getPasswordField().setText("");
 	    }else{
 		JOptionPane.showMessageDialog(theView.getFrame(),"Password incorrect ! Try again");
 	    }
@@ -803,6 +826,17 @@ public class Controller {
 
     }
 
+    public class RefreshAdminTabListener implements ActionListener{
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+	    getAndShowAdminTable();
+
+	}
+
+    }
+
+
     public class CalculateFareListener implements ActionListener{
 
 	public void actionPerformed(ActionEvent arg0) {
@@ -823,6 +857,62 @@ public class Controller {
 
 	}
 
+    }
+
+    public class AddUserListener implements ActionListener{
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+
+	    String username = theView.getAdminPanel().getTfLogin().getText();
+	    String password = theView.getAdminPanel().getTfPass().getText();
+
+	    try {
+		logDB.addNewUser(username, password);
+		getAndShowAdminTable();
+		theView.getAdminPanel().cleanAllFields();
+	    } catch (Exception e) {
+		System.out.println(e.getMessage());
+		JOptionPane.showMessageDialog(theView.getFrame(),"Problem with the Data Base check connection");
+	    }
+
+	}
+    }
+
+    public class FetchUserListener implements ActionListener{
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+
+	    JTable adminTable = theView.getAdminPanel().getTable();
+	    int row =  adminTable.getSelectedRow();
+	    if(row >= 0){
+		theView.getAdminPanel().getTfLogin().setText((String) adminTable.getValueAt(row, 0)); //login
+		theView.getAdminPanel().getTfPass().setText((String) adminTable.getValueAt(row, 1)); //password
+	    }else{
+		JOptionPane.showMessageDialog(theView.getFrame(),"Not possible to fetch the record. Refresh and try again");
+	    }
+	}
+    }
+
+    public class DeleteUserListener implements ActionListener{
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+
+	    try {
+		if(!theView.getAdminPanel().getTfLogin().getText().equals("")){
+		    String username = theView.getAdminPanel().getTfLogin().getText();
+		    logDB.deleteUser(username);
+		    getAndShowAdminTable();
+		    theView.getAdminPanel().cleanAllFields();
+
+		}else{
+		    JOptionPane.showMessageDialog(theView.getFrame(),"Insert correct username");
+		}
+	    } catch (Exception e) {
+		JOptionPane.showMessageDialog(theView.getFrame(),"Problem with the Data Base check connection");
+		e.printStackTrace();
+
+	    }
+	}
     }
     /**
      * Builds a txt version of the ticket to be sent  to the client as a confirmation

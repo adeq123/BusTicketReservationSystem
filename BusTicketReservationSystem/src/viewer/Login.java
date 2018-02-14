@@ -17,6 +17,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JButton;
 import javax.swing.SpringLayout;
 import javax.swing.ImageIcon;
+import java.awt.Toolkit;
 
 public class Login extends JFrame {
 
@@ -57,6 +58,7 @@ public class Login extends JFrame {
      * Create the frame.
      */
     public Login() {
+    	setIconImage(Toolkit.getDefaultToolkit().getImage(Login.class.getResource("/viewer/Bus-2-icon.png")));
 	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	setBounds(100, 100, 450, 300);
 	contentPane = new JPanel();
