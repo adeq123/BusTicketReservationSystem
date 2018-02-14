@@ -34,5 +34,10 @@ After selecting the bus the user should select Load. As a consequence of that th
 ![](BusTicketReservationSystem/readme%20images/reservation2.png)
 ![](BusTicketReservationSystem/readme%20images/reservation3.png)
 
-After selecting the seat the user needs to click make reservation and booking details shows up. To continue name, mobile and e-mail needs to be entered. User can undo the reservation by clicing Cancel. After clicing the Submit the ticket is printed to the PDF file. The user needs to show the location where ticket will be saved. Moreover the passenger will get confirmation on his e-mail adress.
+After selecting the seat the user needs to click make reservation and booking details shows up. To continue name, mobile and e-mail needs to be entered. User can undo the reservation by clicing Cancel. After clicing the Submit the ticket is printed to the PDF file. The user needs to show the location where ticket will be saved. Moreover the passenger will get confirmation on his e-mail adress. The email is send using SSL protocol.
+
 ![](BusTicketReservationSystem/readme%20images/reservation4.png)
+![](BusTicketReservationSystem/readme%20images/reservation5.png)
+![](BusTicketReservationSystem/readme%20images/reservation6.png)
+
+
