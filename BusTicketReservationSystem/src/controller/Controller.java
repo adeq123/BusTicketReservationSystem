@@ -689,9 +689,9 @@ public class Controller {
 
 				wiadomosc.send("adrianroguski1990", "smtp.wp.pl", 465);
 
-			    } catch (DocumentException  e1) {
+			    } catch (DocumentException  e5) {
 				JOptionPane.showMessageDialog(theView.getFrame(), "Problem with the file you want write to. Please check the file!");
-				e1.printStackTrace();
+				e5.printStackTrace();
 			    }catch (IOException   e2) {
 				JOptionPane.showMessageDialog(theView.getFrame(), "Problem with image you want to print out!");
 				e2.printStackTrace();
