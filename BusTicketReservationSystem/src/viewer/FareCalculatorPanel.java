@@ -46,16 +46,18 @@ public class FareCalculatorPanel extends JPanel {
     	springLayout.putConstraint(SpringLayout.EAST, to, 174, SpringLayout.EAST, lblTo);
     	add(to);
     	
-    	btnCalculateFare = new JButton("Calculate Fare");
+    	btnCalculateFare = new JButton("Calculate fare");
     	springLayout.putConstraint(SpringLayout.NORTH, btnCalculateFare, 21, SpringLayout.SOUTH, from);
     	springLayout.putConstraint(SpringLayout.WEST, btnCalculateFare, 341, SpringLayout.WEST, this);
+    	springLayout.putConstraint(SpringLayout.SOUTH, btnCalculateFare, -245, SpringLayout.SOUTH, this);
     	btnCalculateFare.setFont(new Font("Tahoma", Font.BOLD, 14));
     	add(btnCalculateFare);
     	
     	lblShowfare = new JLabel("");
-    	springLayout.putConstraint(SpringLayout.SOUTH, btnCalculateFare, -38, SpringLayout.NORTH, lblShowfare);
-    	springLayout.putConstraint(SpringLayout.NORTH, lblShowfare, 134, SpringLayout.NORTH, this);
-    	springLayout.putConstraint(SpringLayout.EAST, lblShowfare, -468, SpringLayout.EAST, this);
+    	springLayout.putConstraint(SpringLayout.NORTH, lblShowfare, 19, SpringLayout.SOUTH, btnCalculateFare);
+    	springLayout.putConstraint(SpringLayout.WEST, lblShowfare, 360, SpringLayout.WEST, this);
+    	springLayout.putConstraint(SpringLayout.SOUTH, lblShowfare, 147, SpringLayout.NORTH, this);
+    	springLayout.putConstraint(SpringLayout.EAST, lblShowfare, -583, SpringLayout.EAST, this);
     	lblShowfare.setFont(new Font("Tahoma", Font.BOLD, 16));
     	add(lblShowfare);
 
