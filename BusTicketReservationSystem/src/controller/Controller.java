@@ -603,14 +603,16 @@ public class Controller {
 		String from = theBus.getString("source");
 		String to = theBus.getString("destination");
 		String distance = theBus.getString("distance");
-
+		String ticketNumber = Long.toString(getUniqueID());
+		
 		passenger.getLblShowarrivaltime().setText(arrivalTime);
 		passenger.getLblShowleavingtime().setText(sourceTime);
 		passenger.getLblShowbusid().setText(id);
 		passenger.getLblShowfrom().setText(from);
 		passenger.getLblShowto().setText(to);
 		passenger.getLblShowdistance().setText(distance);
-
+		passenger.getLblShowprice().setText(Double.toString(BusTicketCalculations.getTicketPrice(Double.parseDouble(distance))) + " zl.");
+		passenger.getLblShowticketno().setText(ticketNumber);
 	    }
 	} catch (Exception e1) {
 	    JOptionPane.showMessageDialog(theView.getFrame(),"Problem with the Data Base check connection");
@@ -661,7 +663,7 @@ public class Controller {
 		    String cost = Double.toString(model.BusTicketCalculations.getTicketPrice(Double.parseDouble(distance)));
 		    String busId = passenger.getLblShowbusid().getText();
 		    String seat = passenger.getLblShowseat().getText();
-		    String ticketNumber = Long.toString(getUniqueID());
+		    String ticketNumber = passenger.getLblShowticketno().getText();
 		    try {
 			//save to db
 			dbModel.addNewTicket(ticketNumber, source, destination, date, timing, distance, cost, busId, seat, passengerName, mobile, email);

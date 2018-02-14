@@ -33,7 +33,9 @@ public class PassengerWindow{
     private JLabel lblShowarrivaltime;
     private JLabel lblShowseat;
     private JLabel lblShowdistance;
-    private JLabel lblShowTicketNumber;
+    private JLabel lblShowprice;
+ 
+    private JLabel lblShowticketno;
 
 
     /**
@@ -68,7 +70,7 @@ public class PassengerWindow{
     private void initialize() {
 	frame = new JFrame();
 	frame.setIconImage(Toolkit.getDefaultToolkit().getImage(PassengerWindow.class.getResource("/viewer/Bus-2-icon.png")));
-	frame.setBounds(100, 100, 362, 449);
+	frame.setBounds(100, 100, 367, 475);
 	frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	frame.getContentPane().setLayout(null);
 	
@@ -109,45 +111,45 @@ public class PassengerWindow{
 	
 	JLabel lblPassengerDetails = new JLabel("Passenger details:");
 	lblPassengerDetails.setFont(new Font("Tahoma", Font.BOLD, 14));
-	lblPassengerDetails.setBounds(10, 234, 128, 20);
+	lblPassengerDetails.setBounds(10, 293, 128, 20);
 	frame.getContentPane().add(lblPassengerDetails);
 	
 	JLabel lblName = new JLabel("Name:");
 	lblName.setFont(new Font("Tahoma", Font.PLAIN, 14));
-	lblName.setBounds(10, 265, 46, 14);
+	lblName.setBounds(10, 324, 46, 14);
 	frame.getContentPane().add(lblName);
 	
 	JLabel lblMob = new JLabel("Mob.:");
 	lblMob.setFont(new Font("Tahoma", Font.PLAIN, 14));
-	lblMob.setBounds(10, 290, 46, 14);
+	lblMob.setBounds(10, 349, 46, 14);
 	frame.getContentPane().add(lblMob);
 	
 	JLabel lblMail = new JLabel("E-mail");
 	lblMail.setFont(new Font("Tahoma", Font.PLAIN, 14));
-	lblMail.setBounds(10, 315, 46, 14);
+	lblMail.setBounds(10, 374, 46, 14);
 	frame.getContentPane().add(lblMail);
 	
 	txtName = new JTextField();
-	txtName.setBounds(64, 264, 86, 20);
+	txtName.setBounds(64, 323, 86, 20);
 	frame.getContentPane().add(txtName);
 	txtName.setColumns(10);
 	
 	txtMobileNumber = new JTextField();
-	txtMobileNumber.setBounds(64, 289, 86, 20);
+	txtMobileNumber.setBounds(64, 348, 86, 20);
 	frame.getContentPane().add(txtMobileNumber);
 	txtMobileNumber.setColumns(10);
 	
 	txtEmailAdress = new JTextField();
-	txtEmailAdress.setBounds(64, 314, 86, 20);
+	txtEmailAdress.setBounds(64, 373, 86, 20);
 	frame.getContentPane().add(txtEmailAdress);
 	txtEmailAdress.setColumns(10);
 	
 	btnSubmit = new JButton("Submit");
-	btnSubmit.setBounds(42, 347, 89, 23);
+	btnSubmit.setBounds(42, 406, 89, 23);
 	frame.getContentPane().add(btnSubmit);
 	
 	btnCancel = new JButton("Cancel");
-	btnCancel.setBounds(174, 347, 89, 23);
+	btnCancel.setBounds(174, 406, 89, 23);
 	frame.getContentPane().add(btnCancel);
 	
 	lblShowdate = new JLabel("showDate");
@@ -200,14 +202,25 @@ public class PassengerWindow{
 	lblShowdistance.setBounds(174, 211, 61, 14);
 	frame.getContentPane().add(lblShowdistance);
 	
-	lblShowTicketNumber = new JLabel("");
-	lblShowTicketNumber.setFont(new Font("Tahoma", Font.BOLD, 16));
-	lblShowTicketNumber.setBounds(10, 370, 326, 30);
-	frame.getContentPane().add(lblShowTicketNumber);
-    }
-
-    public JLabel getLblShowTicketNumber() {
-        return lblShowTicketNumber;
+	JLabel lblPrice = new JLabel("Price:");
+	lblPrice.setFont(new Font("Tahoma", Font.PLAIN, 14));
+	lblPrice.setBounds(10, 236, 46, 14);
+	frame.getContentPane().add(lblPrice);
+	
+	JLabel lblTicketNo = new JLabel("Ticket No.:");
+	lblTicketNo.setFont(new Font("Tahoma", Font.PLAIN, 14));
+	lblTicketNo.setBounds(10, 261, 105, 14);
+	frame.getContentPane().add(lblTicketNo);
+	
+	lblShowprice = new JLabel("showPrice");
+	lblShowprice.setFont(new Font("Tahoma", Font.PLAIN, 14));
+	lblShowprice.setBounds(171, 236, 155, 14);
+	frame.getContentPane().add(lblShowprice);
+	
+	lblShowticketno = new JLabel("showTicketNo");
+	lblShowticketno.setFont(new Font("Tahoma", Font.PLAIN, 14));
+	lblShowticketno.setBounds(171, 261, 145, 14);
+	frame.getContentPane().add(lblShowticketno);
     }
 
     public JTextField getTxtName() {
@@ -265,4 +278,12 @@ public class PassengerWindow{
     public JLabel getLblShowdistance() {
         return lblShowdistance;
     }
+    public JLabel getLblShowprice() {
+        return lblShowprice;
+    }
+
+    public JLabel getLblShowticketno() {
+        return lblShowticketno;
+    }
+    
 }
