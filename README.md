@@ -8,7 +8,7 @@ This project was made to practice and show my practical knoledge of JAVA SE, MYS
 ## General description
 The application allows to book a ticket from one place to desired destination. It shows you the bus layout and allows you to choose the seat. Afterwards the ticket is printed to pdf and confirmation is send to passengers e-mail adress. Afterwards the ticket is added to MYSQL database. The ticket table can managed / updated by mean of given graphical interface. Moreover you can add new routes to the program. Appropriate GUI is provided. User can add / delete / update / view all of the routes. Administration panel is provided where adminstration can view / add / delete users.
 ## Detailed description & features
-### Login
+### Login & Administration
 To open the application you have to be registered user or admin and enter correct login / password pair.
 ![](BusTicketReservationSystem/readme%20images/login.png)
 
@@ -19,5 +19,20 @@ If you enter correct credentials you will get info about that and the applicatio
 ![](BusTicketReservationSystem/readme%20images/log%20correct.png)
 
 The administrator can manage users in Administration tab. To show hidden admin tools you have to know the password which is hard typed in the system. After you do that the tools shows up. You can view all of the users, add and delete them.
+
 ![](BusTicketReservationSystem/readme%20images/Administration.png)
+
 ![](BusTicketReservationSystem/readme%20images/Administration2.png)
+
+### Ticket Reservation
+
+One of the main purposes of this application is ticket booking. The reservation starts with selection of source and destination city. Afterwards you should enter the travel date and click Get Bus Details. Then you can select the specific bus you would like to travel or click Reset to regret and go back.  
+
+![](BusTicketReservationSystem/readme%20images/reservation1.png)
+
+After selecting the bus the user should select Load. As a consequence of that the bus layout shows up. To move forward the user needs to select the seat by direct click on the seat we would like to have. If no bus is selected the information about that is shown and you cannot move further. 
+![](BusTicketReservationSystem/readme%20images/reservation2.png)
+![](BusTicketReservationSystem/readme%20images/reservation3.png)
+
+After selecting the seat the user needs to click make reservation and booking details shows up. To continue name, mobile and e-mail needs to be entered. User can undo the reservation by clicing Cancel. After clicing the Submit the ticket is printed to the PDF file. The user needs to show the location where ticket will be saved. Moreover the passenger will get confirmation on his e-mail adress.
+![](BusTicketReservationSystem/readme%20images/reservation4.png)
