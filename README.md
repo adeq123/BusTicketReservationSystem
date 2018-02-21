@@ -68,3 +68,7 @@ File Handling - reading / writing to txt file. PDF generation. E-Mail sending wi
 
 ## Author
 Adrian Roguski with inspiration from http://www.lovelycoding.org (100% of coding was done by author though).
+
+### Bugs && To be done...
+- Add one more bus to layouts
+- Split controller to smaller parts ??
