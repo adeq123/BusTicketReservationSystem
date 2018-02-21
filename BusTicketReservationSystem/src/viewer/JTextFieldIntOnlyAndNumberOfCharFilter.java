@@ -11,6 +11,11 @@ import javax.swing.text.PlainDocument;
  * @see JTextFieldCharLimit
  */
 public class JTextFieldIntOnlyAndNumberOfCharFilter extends PlainDocument{
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -8688648122864228483L;
+
     String numbers="1234567890-.";
 
     private int limit;

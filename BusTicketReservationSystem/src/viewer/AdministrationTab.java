@@ -1,4 +1,4 @@
-package model;
+package viewer;
 
 import javax.swing.JPanel;
 import javax.swing.SpringLayout;

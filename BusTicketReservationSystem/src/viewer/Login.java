@@ -1,15 +1,10 @@
 package viewer;
 
-import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.layout.RowSpec;
-import com.jgoodies.forms.layout.FormSpecs;
 import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.JTextField;
@@ -21,6 +16,10 @@ import java.awt.Toolkit;
 
 public class Login extends JFrame {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -3266034216160504470L;
     private JPanel contentPane;
     private JTextField tfLogin;
     private JPasswordField pfPassword;

@@ -3,8 +3,6 @@ package viewer;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.time.Year;
 import java.time.ZoneId;
@@ -15,12 +13,15 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.JToggleButton;
 import javax.swing.SwingConstants;
 
 public class ReservationTab extends JPanel{
 
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -7058204607421031720L;
     private JTextField DDField;
     private JTextField MMField;
     private JTextField YYYYField;
@@ -106,7 +107,7 @@ public class ReservationTab extends JPanel{
 	lblSelectBusFrom.setBounds(10, 102, 212, 14);
 	this.add(lblSelectBusFrom);
 
-	busListDropDown = new <String> JComboBox();
+	busListDropDown = new JComboBox<String> ();
 	busListDropDown.setBounds(221, 101, 224, 20);
 	this.add(busListDropDown);
 

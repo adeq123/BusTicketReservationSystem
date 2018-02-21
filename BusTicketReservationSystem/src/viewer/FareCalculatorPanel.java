@@ -9,8 +9,9 @@ import javax.swing.JButton;
 
 public class FareCalculatorPanel extends JPanel {
 
-    private JComboBox from;
-    private JComboBox to;
+    private static final long serialVersionUID = 6731726915536079381L;
+    private JComboBox<String> from;
+    private JComboBox<String> to;
     private JButton btnCalculateFare;
     private JLabel lblShowfare;
 
@@ -27,7 +28,7 @@ public class FareCalculatorPanel extends JPanel {
     	lblFrom.setFont(new Font("Tahoma", Font.PLAIN, 14));
     	add(lblFrom);
     	
-    	from = new JComboBox();
+    	from = new JComboBox<String>();
     	springLayout.putConstraint(SpringLayout.NORTH, from, 10, SpringLayout.NORTH, this);
     	springLayout.putConstraint(SpringLayout.WEST, from, 20, SpringLayout.EAST, lblFrom);
     	springLayout.putConstraint(SpringLayout.EAST, from, 169, SpringLayout.EAST, lblFrom);
@@ -40,7 +41,7 @@ public class FareCalculatorPanel extends JPanel {
     	lblTo.setFont(new Font("Tahoma", Font.PLAIN, 14));
     	add(lblTo);
     	
-    	to = new JComboBox();
+    	to = new JComboBox<String>();
     	springLayout.putConstraint(SpringLayout.NORTH, to, 0, SpringLayout.NORTH, lblFrom);
     	springLayout.putConstraint(SpringLayout.WEST, to, 16, SpringLayout.EAST, lblTo);
     	springLayout.putConstraint(SpringLayout.EAST, to, 174, SpringLayout.EAST, lblTo);
@@ -63,11 +64,11 @@ public class FareCalculatorPanel extends JPanel {
 
     }
     
-    public JComboBox getCBFrom() {
+    public JComboBox<String> getCBFrom() {
         return from;
     }
 
-    public JComboBox getCBTo() {
+    public JComboBox<String> getCBTo() {
         return to;
     }
 

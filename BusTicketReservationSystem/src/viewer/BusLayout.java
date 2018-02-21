@@ -15,6 +15,11 @@ import javax.swing.JToggleButton;
 public abstract class BusLayout extends JPanel{
 
     /**
+     * 
+     */
+    private static final long serialVersionUID = -958590561813322031L;
+
+    /**
      * Loads the list of seats marks them as occupied and disables.
      * @param seatsList, String, list of occupied seats in format 1;2;3;12;16 ......
      */

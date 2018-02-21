@@ -4,21 +4,14 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
-
 import java.awt.Font;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 import java.awt.Toolkit;
 
 public class PassengerWindow{
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -3002449385948168650L;
     private JFrame frame;
     private JTextField txtName;
     private JTextField txtMobileNumber;

@@ -7,21 +7,10 @@ import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.ImageIcon;
 import javax.swing.JTabbedPane;
-import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
-import javax.swing.JTextField;
 import controller.Controller;
-import model.AdministrationTab;
 
-import javax.swing.SwingConstants;
-import javax.swing.JButton;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.BorderLayout;
 import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.JScrollPane;
-import javax.swing.ListSelectionModel;
 import java.awt.Toolkit;
 
 /**
@@ -31,7 +20,6 @@ import java.awt.Toolkit;
  */
 public class GeneralView {
     private JFrame     Frame;
-    private Controller theController; /* do I really need it ???*/
     private BusManagementTab busManagementPanel;
     private ReservationTab reservationPanel;
     private JFileChooser printer ;
@@ -67,7 +55,6 @@ public class GeneralView {
      * Create the application.
      */
     public GeneralView(Controller theController) {
-	this.theController = theController;
 	initialize();
     }
 

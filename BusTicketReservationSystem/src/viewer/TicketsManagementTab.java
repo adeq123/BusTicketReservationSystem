@@ -11,6 +11,10 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 public class TicketsManagementTab extends JPanel {
+	/**
+     * 
+     */
+    private static final long serialVersionUID = -1705120952169642162L;
 	private JTextField tfTicketNumber;
 	private JTextField tfPassengerName;
 	private JTextField tfMobile;

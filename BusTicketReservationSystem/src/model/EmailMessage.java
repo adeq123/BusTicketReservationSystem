@@ -58,6 +58,11 @@ public class EmailMessage {
 	return bcc;
     }
 
+    /**
+     * The clas builds the Email with a given input
+     * @author ADRO
+     *
+     */
     public static class EmailBuilder {
 
 	private String from;
@@ -107,19 +112,22 @@ public class EmailMessage {
 
 
     }
-
+/**
+ * Sends this email message within SSL protocole
+ * @param pwd, password to email box
+ * @param host, String, host name of email provider
+ * @param port, int, port used to send
+ * @throws MessagingException
+ */
     public void send(String pwd, String host, int port) throws MessagingException {
-
 
 	Authenticator auth = new myAuthenticator(this.getFrom(), pwd);
 	Properties props = new Properties();
 	props.put("mail.transport.protocol", "smtps"); // protokol z ssl
 	props.put("mail.smtps.auth", "true");
 
-
 	Session mailSession = Session.getDefaultInstance(props,auth); 
 	mailSession.setDebug(true);
-
 
 	MimeMessage message = new MimeMessage(mailSession);
 	message.setFrom(this.getFrom()); //required
@@ -151,6 +159,11 @@ public class EmailMessage {
     }
 }
 
+/**
+ * Creates new Authenticator for a given username and password
+ * @author ania
+ *
+ */
 class myAuthenticator extends Authenticator {
     String username;
     String password;

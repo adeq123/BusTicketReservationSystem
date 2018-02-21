@@ -4,15 +4,12 @@ import java.awt.Font;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
-
-import controller.Controller;
 /**
  * This part of the viewer is resposible for Bus Management Tab. Done like that to split the code and increase readability
  * @author ania
@@ -20,6 +17,10 @@ import controller.Controller;
  */
 public class BusManagementTab extends JPanel{
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 2528495411874650347L;
     private JTextField tfBusID;
     private JTextField tfBusName;
     private JTable     busTimeTable;
@@ -32,11 +33,11 @@ public class BusManagementTab extends JPanel{
     private JButton    btnFetchRecord;
     private JTextField tfFrom;
     private JTextField tfTo;
-    private JComboBox  cbBusType;
-    private JComboBox  cbHHFrom;
-    private JComboBox  cbMMFrom;
-    private JComboBox  cbHHTo;
-    private JComboBox  cbMMTo;
+    private JComboBox<String>  cbBusType;
+    private JComboBox<String>  cbHHFrom;
+    private JComboBox<String>  cbMMFrom;
+    private JComboBox<String>  cbHHTo;
+    private JComboBox<String>  cbMMTo;
 
     public BusManagementTab() {
 	JLabel lblBusId = new JLabel("Bus ID :");
@@ -188,11 +189,11 @@ public class BusManagementTab extends JPanel{
 	this.add(tfTo);
 	tfTo.setColumns(10);
 
-	cbHHFrom = new JComboBox(GeneralView.hours);
+	cbHHFrom = new JComboBox<String>(GeneralView.hours);
 	cbHHFrom.setBounds(96, 145, 48, 20);
 	this.add(cbHHFrom);
 
-	cbMMFrom = new JComboBox(GeneralView.minutes);
+	cbMMFrom = new JComboBox<String>(GeneralView.minutes);
 	cbMMFrom.setBounds(157, 145, 49, 20);
 	this.add(cbMMFrom);
 
@@ -200,15 +201,15 @@ public class BusManagementTab extends JPanel{
 	label_4.setBounds(147, 202, 10, 14);
 	this.add(label_4);
 
-	cbHHTo = new JComboBox(GeneralView.hours);
+	cbHHTo = new JComboBox<String>(GeneralView.hours);
 	cbHHTo.setBounds(96, 199, 48, 20);
 	this.add(cbHHTo);
 
-	cbMMTo = new JComboBox(GeneralView.minutes);
+	cbMMTo = new JComboBox<String>(GeneralView.minutes);
 	cbMMTo.setBounds(157, 199, 49, 20);
 	this.add(cbMMTo);
 
-	cbBusType = new JComboBox(GeneralView.allowedBusTypes);
+	cbBusType = new JComboBox<String>(GeneralView.allowedBusTypes);
 	cbBusType.setBounds(86, 67, 150, 20);
 	this.add(cbBusType);
     }
@@ -261,23 +262,23 @@ public class BusManagementTab extends JPanel{
 	return tfTo;
     }
 
-    public JComboBox getCbBusType() {
+    public JComboBox<String> getCbBusType() {
 	return cbBusType;
     }
 
-    public JComboBox getCbHHFrom() {
+    public JComboBox<String> getCbHHFrom() {
 	return cbHHFrom;
     }
 
-    public JComboBox getCbMMFrom() {
+    public JComboBox<String> getCbMMFrom() {
 	return cbMMFrom;
     }
 
-    public JComboBox getCbHHTo() {
+    public JComboBox<String> getCbHHTo() {
 	return cbHHTo;
     }
 
-    public JComboBox getCbMMTo() {
+    public JComboBox<String> getCbMMTo() {
 	return cbMMTo;
     }
 }

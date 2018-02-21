@@ -54,7 +54,6 @@ public class DataBaseModel {
 		    + "distance float NOT NULL, "
 		    + "PRIMARY KEY(busId))");
 
-
 	    create.executeUpdate();
 	}catch(Exception e){System.out.println(e);}
     }
@@ -81,9 +80,7 @@ public class DataBaseModel {
 	   	+ "passengerName varchar(255), "
 	   	+ "mobile varchar(255), "
 	   	+ "email varchar(255), "
-
 	   	+ "PRIMARY KEY(ticketNumber))");
-
 
 	    create.executeUpdate();
 	}catch(Exception e){System.out.println(e);}
@@ -203,7 +200,6 @@ public class DataBaseModel {
 	create.setString(9, Integer.toString(busId));
 	create.executeUpdate();
     }
-
 
     /**
      * Returns all the records with the given source and destination

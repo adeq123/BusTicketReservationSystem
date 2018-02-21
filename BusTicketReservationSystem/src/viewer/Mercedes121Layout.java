@@ -4,7 +4,6 @@ import javax.swing.border.LineBorder;
 import java.awt.Color;
 import javax.swing.JToggleButton;
 import javax.swing.ImageIcon;
-import java.util.LinkedList;
 import javax.swing.JLabel;
 import java.awt.Font;
 
